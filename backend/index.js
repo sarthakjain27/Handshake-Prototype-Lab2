@@ -13,9 +13,9 @@ const Database=require('./Database');
 const Config = require('./config');
 const Signup = require('./apis/signup');
 const Login = require('./apis/login');
-// const JobComponent = require('./apis/jobComponent');
+const JobComponent = require('./apis/jobComponent');
 // const EventComponent = require('./apis/eventComponent');
-// const ProfileComponent = require('./apis/profileComponent');
+const ProfileComponent = require('./apis/profileComponent');
 // const SkillSetComponent = require('./apis/skillSetComponent');
 // const SearchComponent = require('./apis/searchComponent');
 
@@ -50,6 +50,18 @@ app.post('/signup', (req, res) => {
 app.post('/login', (req, res) => {
   Login.login(req, res, bcrypt);
 });
+
+app.post('/createJobPost', (req, res) => {
+  JobComponent.createJobPost(req, res);
+});
+
+app.post('/listCompanyPostedJobs', (req, res) => {
+  JobComponent.listCompanyPostedJobs(req, res);
+});
+
+app.post('/getStudentInfo', (req, res) => {
+  ProfileComponent.getStudentInfo(res, res);
+})
 
 const server = app.listen(3001, () => {
   console.log('Server listening on port 3001');
