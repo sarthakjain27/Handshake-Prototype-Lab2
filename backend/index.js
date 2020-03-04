@@ -60,8 +60,31 @@ app.post('/listCompanyPostedJobs', (req, res) => {
 });
 
 app.post('/getStudentInfo', (req, res) => {
-  ProfileComponent.getStudentInfo(res, res);
+  ProfileComponent.getStudentInfo(req, res);
+});
+
+app.post('/getCompanyInfo', (req, res) => {
+  ProfileComponent.getCompanyInfo(req,res);
 })
+
+app.post('/getPostedJobs', (req, res) => {
+  JobComponent.getPostedJobs(req, res);
+});
+
+const studentResumeFileStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, './Resume/JobApplication');
+  },
+  filename(req, file, cb) {
+    cb(null, `${req.body.studentId}_${req.body.jobPostId}.${file.originalname.split('.')[file.originalname.split('.').length - 1]}`);
+  },
+});
+
+const studentResumeFileUpload = multer({ storage: studentResumeFileStorage });
+
+app.post('/applyForJob', studentResumeFileUpload.single('file'), (req, res) => {
+  JobComponent.applyForJob(req, res);
+});
 
 const server = app.listen(3001, () => {
   console.log('Server listening on port 3001');

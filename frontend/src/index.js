@@ -33,7 +33,6 @@ class AllRoutesCombined extends React.Component {
 
         <Route exact path="/viewPostedJobs" component={StudentHome} />
 
-
       </Router>
     );
   }

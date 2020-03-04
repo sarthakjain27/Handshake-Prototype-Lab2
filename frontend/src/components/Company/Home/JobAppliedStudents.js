@@ -23,6 +23,7 @@ class JobAppliedStudents extends React.Component{
     this.setReviewStatus = this.setReviewStatus.bind(this);
     this.setDeclineStatus = this.setDeclineStatus.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.goBackToListings = this.goBackToListings.bind(this);
   }
 
   // Constructor -> ComponentWillMount -> Render -> ComponentDidMount
@@ -38,20 +39,18 @@ class JobAppliedStudents extends React.Component{
         } else if(response.data === 'User Not Present'){
           window.alert(eachStudent.studentId+' student not present in database');
         } else{
-          response.data['status'] = eachStudent.status;
-          response.data['resumeFileUrl'] = eachStudent.resumeFileUrl;
-          response.data['applyingDate'] = eachStudent.applyingDate;
-          response.data['jobApplicationId'] = eachStudent._id;
-          profiles.push(response.data);
+          const each = {...response.data,status:eachStudent.status,resumeFileUrl:eachStudent.resumeFileUrl,applyingDate:eachStudent.applyingDate,jobApplicationId:eachStudent._id};
+          profiles.push(each);
         }
+      }).then(()=>{
+        this.setState({
+          registeredStudentsProfile:profiles
+        });
       }).catch(err => {
         console.log(`Error in componentDidMount of JobAppliedStudents: ${err}`);
         window.alert('Error in connecting to server');
       });
     })
-    this.setState({
-      registeredStudentsProfile:profiles
-    });
   }
 
   handleClose(){
@@ -67,6 +66,11 @@ class JobAppliedStudents extends React.Component{
       word = word.join(splitParam);
       return word;
     }
+  }
+
+  goBackToListings(e){
+    e.preventDefault();
+    window.location.href = '/listPostings';
   }
 
   showStudentResume(resumeUrl,studentname){
@@ -175,7 +179,7 @@ class JobAppliedStudents extends React.Component{
             <div className="row">
               <div className="col-md-4">
                 <div className="experienceHeading">
-                  <h3>Some Random Thing to Add Here Later</h3>
+                  <h3><Button style={{width:150,height:50}} onClick={this.goBackToListings}>Go Back</Button></h3>
                 </div>
               </div>
               <div className="col-md-8">
