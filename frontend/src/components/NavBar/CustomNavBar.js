@@ -1,18 +1,21 @@
 import React from 'react';
 import {Navbar, Nav, NavDropdown, Image} from 'react-bootstrap';
+import { connect } from 'react-redux';
 import {serverIp, serverPort} from '../../config';
+import { userLogout } from '../../actions/loginAction';
 
 class CustomNavBar extends React.Component{
-  constructor(props){
-    super(props);
+  constructor(){
+    super();
     this.onSelectNavHandler = this.onSelectNavHandler.bind(this);
   }
 
   onSelectNavHandler(e){
     if(e === 'logOut'){
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href='/';
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      this.props.userLogout();
+      window.location.href = "/";
     }
   }
 
@@ -89,4 +92,4 @@ class CustomNavBar extends React.Component{
   }
 }
 
-export default CustomNavBar;
+export default connect(null, { userLogout })(CustomNavBar);

@@ -1,9 +1,10 @@
 import React from 'react';
 import './Login.css';
-import axios from 'axios';
-import {serverIp, serverPort} from '../../config';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 import Dropdown from 'react-dropdown';
 import '../../../node_modules/react-dropdown/style.css';
+import { userLogin } from '../../actions/loginAction';
 
 class Login extends React.Component{
 
@@ -15,22 +16,14 @@ class Login extends React.Component{
       user:'',
       userOptions:['student','company']
     };
-    this.onChangeUserNameHandler = this.onChangeUserNameHandler.bind(this);
-    this.onChangePasswordHandler = this.onChangePasswordHandler.bind(this);
     this.onChangeUserHandler = this.onChangeUserHandler.bind(this);
     this.onLoginSubmit = this.onLoginSubmit.bind(this);
+    this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-
-  onChangeUserNameHandler(e){
+  onChangeHandler(e){
     this.setState({
-      emailId:e.target.value
-    });
-  }
-
-  onChangePasswordHandler(e){
-    this.setState({
-      password:e.target.value
+      [e.target.name]:e.target.value
     });
   }
 
@@ -51,48 +44,50 @@ class Login extends React.Component{
         password: this.state.password,
         user: this.state.user
       }
-  
-      axios.defaults.withCredentials = true;
-      axios.post(serverIp+':'+serverPort+'/login',data)
-      .then(response => {
-        console.log('Login Response Data');
-        console.log(response.data);
-        if(response.data === 'User Not Present') {
-          window.alert('Given username not present.')
-        } else if(response.data === 'Wrong Password') {
-          window.alert('Wrong Password given')
-        } else if (response.data === 'Error'){
-          window.alert('Error in Connecting to Database');
-        } else if(response.data === 'Error in comparing Password'){
-          window.alert('Error in comparing the password');
-        } else if(response.data === 'Wrong UserRole Given'){
-          window.alert('Wrong UserRole Given from the dropdown');
-        }else {
-            localStorage.setItem('email_id',this.state.emailId.toLowerCase());
-            localStorage.setItem('userRole',this.state.user);
-            localStorage.setItem('profile_picture_url',response.data['profilePictureUrl']);
-            if(this.state.user === 'company') {
-              window.location.href = '/listPostings';
-            }
-            else {
-              window.location.href = '/viewPostedJobs';
-            }
-        }
-      }).catch(err => {
-        console.log(`In catch of axios post call to login api ${err}`);
-        window.alert('Error in Login API axios Post call');
+      this.props.userLogin(data);
+      this.setState({
+        loginFlag: 1
       });
     }
   }
 
   render() {
+    let redirectVar = null;
+    let message = "";
+
+    // Would need to replace this with passport strategy session management then just add check
+    // for presence of jwt in else if (this.prop.user and redirect)
     if(localStorage.getItem('userRole') === 'company'){
-      window.location.href = '/listPostings';
+      redirectVar = <Redirect to="/listPostings"/>
     } else if(localStorage.getItem('userRole') === 'student'){
-      window.location.href = '/viewPostedJobs'
+      redirectVar = <Redirect to="/viewPostedJobs"/>
+    } 
+
+    if (this.props.user === "User Not Present" && this.state.loginFlag){
+      message = "No user with this email id";
+    } else if(this.props.user === "Wrong Password" && this.state.loginFlag){
+      message = "Wrong Password Given";
+    } else if(this.props.user === "Error" && this.state.loginFlag){
+      message = "Error in connecting to database";
+    } else if(this.props.user === "Error in comparing Password" && this.state.loginFlag){
+      message = "Error in comparing the password";
+    } else if(this.props.user === "Wrong UserRole Given" && this.state.loginFlag){
+      message = "Wrong User role given";
+    } else if(this.props.user && this.props.user.profilePictureUrl && this.state.loginFlag){
+      localStorage.setItem('user_id',this.props.user._id);
+      localStorage.setItem('email_id',this.state.emailId.toLowerCase());
+      localStorage.setItem('userRole',this.state.user);
+      localStorage.setItem('profile_picture_url',this.props.user.profilePictureUrl);
+      if(this.state.user === 'company') {
+        redirectVar = <Redirect to="/listPostings"/>
+      }
+      else {
+        redirectVar = <Redirect to="/viewPostedJobs"/>
+      }
     }
     return(
         <div className="container">
+          {redirectVar}
             <div className="login-form">
                 <div className="main-div">
                     <div className="panel">
@@ -100,12 +95,13 @@ class Login extends React.Component{
                         <p>Please enter your username and password</p>
                     </div>
                     <form onSubmit={this.onLoginSubmit}>
+                      <div style={{ color: "#ff0000" }}>{message}</div><br />
                         <div className="form-group">
                             <input type="email" 
                                     className="form-control" 
-                                    name="username" 
+                                    name="emailId" 
                                     placeholder="Username"
-                                    onChange={this.onChangeUserNameHandler}
+                                    onChange={this.onChangeHandler}
                                     required 
                                     autoFocus
                                     autoComplete/>
@@ -117,7 +113,7 @@ class Login extends React.Component{
                                     placeholder="Password"
                                     pattern=".{6,}"
                                     title="Minimum 6 Characters Required"
-                                    onChange={this.onChangePasswordHandler}
+                                    onChange={this.onChangeHandler}
                                     required />
                         </div>
                         <div className="form-group">
@@ -142,7 +138,11 @@ class Login extends React.Component{
         </div>
     );
   }
-
 }
 
-export default Login;
+const mapStateToProps = state => { 
+  return ({
+  user: state.login.user
+})};
+
+export default connect(mapStateToProps, { userLogin })(Login);;
