@@ -45,7 +45,7 @@ const createJobPost = (req, res) => {
       result.jobPostings.push(posting);
       result.save()
       .then(()=>{
-        res.send('Job Post Created Successfully');
+        res.send('Success');
       }).catch((err)=>{
         console.log("Inside catch of createJobPost")
         res.send('Error');
@@ -199,19 +199,57 @@ const applyForJob = (req, res) => {
       }
       i++;
     }
-
-    if(!alreadyApplied){
+    if(alreadyApplied){
+      res.send('Already applied');
+    } else {
       result.jobPostings[i].registeredStudents.push({studentId:studentId,status:'pending',resumeFileUrl:resumeLocation,applyingDate:date});
+      result.save(function(error){
+        if(error){
+          console.log(error);
+          res.send('Error');
+        }
+        res.send('Successfully Applied');
+      });
     }
-    
+  });
+}
+
+const updateAppliedStudentJobStatus = (req, res) => {
+  console.log('Inside updateAppliedStudentJobStatus');
+  console.log(req.body);
+
+  const {status, jobApplicationId, jobId, emailId} = req.body;
+  company.findOne({emailId: emailId},function(error,result){
+    if(error){
+      console.log(error);
+      res.send('Error');
+    } if(result === null){
+      console.log('Company not found with emailId: '+emailId);
+      res.send('Company Not Found');
+    }
+    let i=0,j=0;
+    for(var eachPosting of result.jobPostings){
+      if(eachPosting._id == jobId){
+        console.log('Posting found');
+        for(var eachStudent of eachPosting.registeredStudents){
+          if(eachStudent._id == jobApplicationId){
+            break;
+          }
+          j++;
+        }
+        break;
+      }
+      i++;
+    }
+    result.jobPostings[i].registeredStudents[j].status=status;
     result.save(function(error){
       if(error){
         console.log(error);
         res.send('Error');
       }
-      res.send('Successfully Applied');
+      res.send('Updated');
     });
-  });
+  })
 }
 
 
@@ -219,3 +257,4 @@ exports.listCompanyPostedJobs = listCompanyPostedJobs;
 exports.createJobPost = createJobPost;
 exports.getPostedJobs = getPostedJobs;
 exports.applyForJob = applyForJob;
+exports.updateAppliedStudentJobStatus = updateAppliedStudentJobStatus;

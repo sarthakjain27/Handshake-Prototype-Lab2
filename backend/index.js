@@ -86,6 +86,10 @@ app.post('/applyForJob', studentResumeFileUpload.single('file'), (req, res) => {
   JobComponent.applyForJob(req, res);
 });
 
+app.post('/updateAppliedStudentJobStatus', (req, res) => {
+  JobComponent.updateAppliedStudentJobStatus(req, res);
+})
+
 const server = app.listen(3001, () => {
   console.log('Server listening on port 3001');
 });

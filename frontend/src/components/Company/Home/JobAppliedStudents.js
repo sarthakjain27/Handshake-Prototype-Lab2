@@ -1,8 +1,11 @@
 import React from 'react';
-import {Card, Button, Modal, Image} from 'react-bootstrap';
-import axios from 'axios';
-import {serverIp, serverPort} from '../../../config';
+import {Card, Button, Modal, Image, Alert} from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { getStudentProfileAppliedInJob } from '../../../actions/profileActions';
+import { updateStudentStatus, updateApplyForJobStatus, listCreatedJobs } from '../../../actions/jobActions';
+import { APPLY_FOR_JOB } from '../../../actions/types';
 import CustomNavBar from '../../NavBar/CustomNavBar';
+import { serverIp, serverPort } from '../../../config';
 import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './CompanyHome.css';
 
@@ -10,8 +13,8 @@ class JobAppliedStudents extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      registeredStudents:this.props.location.state.students,
       registeredStudentsProfile:[],
+      registeredStudents:this.props.location.state.students,
       studentResumeUrl:'',
       studentName:'',
       show:false
@@ -20,38 +23,37 @@ class JobAppliedStudents extends React.Component{
     this.returnRegisteredStudents = this.returnRegisteredStudents.bind(this);
     this.capitalize = this.capitalize.bind(this);
     this.showStudentResume = this.showStudentResume.bind(this);
-    this.setReviewStatus = this.setReviewStatus.bind(this);
-    this.setDeclineStatus = this.setDeclineStatus.bind(this);
+    this.setStatus = this.setStatus.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.goBackToListings = this.goBackToListings.bind(this);
   }
 
   // Constructor -> ComponentWillMount -> Render -> ComponentDidMount
-  componentDidMount(){
-    let profiles = [];
-    this.state.registeredStudents.forEach((eachStudent)=>{
-      axios.post(serverIp+':'+serverPort+'/getStudentInfo',{emailId:eachStudent.studentId})
-      .then(response => {
-        console.log('getStudentsRegisteredInAJob Response data in componentDidMount');
-        console.log(response.data);
-        if(response.data === 'Error'){
-          window.alert('Error in Querying Database');
-        } else if(response.data === 'User Not Present'){
-          window.alert(eachStudent.studentId+' student not present in database');
-        } else{
-          const each = {...response.data,status:eachStudent.status,resumeFileUrl:eachStudent.resumeFileUrl,applyingDate:eachStudent.applyingDate,jobApplicationId:eachStudent._id};
-          profiles.push(each);
-        }
-      }).then(()=>{
-        this.setState({
-          registeredStudentsProfile:profiles
-        });
-      }).catch(err => {
-        console.log(`Error in componentDidMount of JobAppliedStudents: ${err}`);
-        window.alert('Error in connecting to server');
-      });
+  componentWillMount(){
+    if(this.state.registeredStudents.length > 0){
+      this.props.getStudentProfileAppliedInJob(this.state.registeredStudents);
+    } else this.setState({
+      noRecord:true
     })
   }
+
+  componentWillReceiveProps(nextProps){
+    console.log('In JobAppliedStudents componentWillReceiveProps');
+    console.log(nextProps);
+    if(nextProps.registeredStudentsProfile){
+      var { registeredStudentsProfile } = nextProps;
+      if(registeredStudentsProfile.noRecord){
+          this.setState({
+              noRecord: registeredStudentsProfile.noRecord
+          });
+      } else {
+          this.setState({
+            registeredStudentsProfile: registeredStudentsProfile.registeredStudents
+          });
+        }
+    }
+  }
+
 
   handleClose(){
     this.setState({
@@ -66,6 +68,7 @@ class JobAppliedStudents extends React.Component{
       word = word.join(splitParam);
       return word;
     }
+    return '';
   }
 
   goBackToListings(e){
@@ -81,38 +84,8 @@ class JobAppliedStudents extends React.Component{
     });
   }
 
-  setReviewStatus(applicationId){
-    axios.post(serverIp+':'+serverPort+'/updateAppliedStudentJobStatus',{status:'reviewed',jobApplicationId:applicationId,jobId:this.props.location.state.jobId})
-    .then(response => {
-      console.log('setReviewStatus response');
-      console.log(response.data);
-      if(response.data === 'Error'){
-        window.alert('Error in updating student job status');
-      } else {
-        window.alert('Successfully updated student job status');
-        window.location.reload();
-      }
-    }).catch(err => {
-      console.log('Error in setReviewStatus in JobAppliedStudents component: '+err);
-      window.alert('Error in connecting to server');
-    })
-  }
-
-  setDeclineStatus(applicationId){
-    axios.post(serverIp+':'+serverPort+'/updateAppliedStudentJobStatus',{status:'declined',jobApplicationId:applicationId,jobId:this.props.location.state.jobId})
-    .then(response => {
-      console.log('setDeclineStatus response');
-      console.log(response.data);
-      if(response.data === 'Error'){
-        window.alert('Error in updating student job status');
-      } else {
-        window.alert('Successfully updated student job status');
-        window.location.reload();
-      }
-    }).catch(err => {
-      console.log('Error in setDeclineStatus in JobAppliedStudents component: '+err);
-      window.alert('Error in connecting to server');
-    })
+  setStatus(applicationId,passedStatus){
+    this.props.updateStudentStatus({status:passedStatus,jobApplicationId:applicationId,jobId:this.props.location.state.jobId,emailId:localStorage.getItem('email_id')});
   }
 
   returnRegisteredStudents(){
@@ -131,9 +104,9 @@ class JobAppliedStudents extends React.Component{
                   {' '}
                   <Button variant="info" onClick={()=>this.showStudentResume(eachStudent.resumeFileUrl,eachStudent.name)}>Resume</Button>
                   {' '}
-                  <Button variant="success" onClick={()=>this.setReviewStatus(eachStudent.jobApplicationId)}>Reviewed</Button>
+                  <Button variant="success" onClick={()=>this.setStatus(eachStudent.jobApplicationId, 'reviewed')}>Review</Button>
                   {' '}
-                  <Button variant="danger" onClick={()=>this.setDeclineStatus(eachStudent.jobApplicationId)}>Decline</Button>
+                  <Button variant="danger" onClick={()=>this.setStatus(eachStudent.jobApplicationId, 'declined')}>Decline</Button>
                 </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">
                   {this.capitalize(eachStudent.collegeName)}
@@ -155,9 +128,31 @@ class JobAppliedStudents extends React.Component{
   }
 
   render(){
+    if (!localStorage.getItem('userRole')) {
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      window.location.href = '/';
+    }
     let resumeShow = <h3>Student didn't upload any Resume</h3>
     if(this.state.studentResumeUrl!==''){
       resumeShow = <iframe src={serverIp+':'+serverPort+'/'+this.state.studentResumeUrl} style={{width:770,height:800}}></iframe>
+    }
+    let noRecordFoundMessage = "";
+    if(this.state.noRecord){
+      noRecordFoundMessage = <Alert variant="info">
+                No Student have applied for this job yet.
+                </Alert>
+    } 
+    if(this.props.studentStatusUpdateMessage!==''){
+      this.props.updateApplyForJobStatus({type:APPLY_FOR_JOB, value:''});
+      //this.props.listCreatedJobs({emailId:localStorage.getItem('email_id')});
+      if(this.props.studentStatusUpdateMessage === 'Updated'){
+        window.alert('Updated student application status successfully');
+      } else{
+        window.alert('Error in updating student application status');
+      }
+      //window.location.reload();
+      window.location.href = '/listPostings';
     }
     return(
       <div>
@@ -185,6 +180,7 @@ class JobAppliedStudents extends React.Component{
               <div className="col-md-8">
                 <div className="educationCard">
                   <div className="experienceHeading">
+                    {noRecordFoundMessage}
                     {this.returnRegisteredStudents()}
                   </div>
                 </div>
@@ -197,4 +193,9 @@ class JobAppliedStudents extends React.Component{
   }
 }
 
-export default JobAppliedStudents;
+const mapStateToProps = state => ({
+  registeredStudentsProfile: state.profile.registeredStudents,
+  studentStatusUpdateMessage: state.job.applyForJob
+});
+
+export default connect(mapStateToProps, { getStudentProfileAppliedInJob, updateStudentStatus, updateApplyForJobStatus, listCreatedJobs })(JobAppliedStudents);

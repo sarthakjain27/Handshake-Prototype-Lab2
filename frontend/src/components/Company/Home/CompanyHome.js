@@ -1,46 +1,102 @@
 import React from 'react';
 import CustomNavBar from '../../NavBar/CustomNavBar';
-import axios from 'axios';
 import Post from './Post';
-import {serverIp, serverPort} from '../../../config';
+import { Alert } from 'react-bootstrap';
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { connect } from 'react-redux';
+import { listCreatedJobs } from '../../../actions/jobActions';
 
 class CompanyHome extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      postings:[]
+      postings:[],
+      numberOfJobsToShowPerPage:5,
+      currentActivePage:1
+    }
+    this.onPageChange = this.onPageChange.bind(this);
+  }
+
+  componentWillMount(){
+    this.props.listCreatedJobs({emailId:localStorage.getItem('email_id')});
+  }
+
+  componentWillReceiveProps(nextProps){
+    if (nextProps.postedJobs) {
+      var { postedJobs } = nextProps;
+      if(postedJobs.noRecord){
+          this.setState({
+              noRecord: postedJobs.noRecord
+          });
+      } else {
+          this.setState({
+            postings: postedJobs.jobList
+          });
+        }
     }
   }
 
-  componentDidMount(){
-    axios.post(serverIp+':'+serverPort+'/listCompanyPostedJobs',{emailId:localStorage.getItem('email_id')})
-    .then(response => {
-      console.log(response.data);
-      if(response.data === 'Error'){
-        window.alert('Error while querying database');
-      } else if(response.data === 'User Not Present'){
-        window.alert('Given user not present');
-      } else{
-        this.setState({
-          postings:response.data
-        });
+  jobList(){
+    if(this.state.postings.length > 0){
+      let eachPageJobCards = [];
+      let count = 0;
+      let activePage = this.state.currentActivePage;
+      for(let i=(activePage-1)*this.state.numberOfJobsToShowPerPage;i<this.state.postings.length && count < this.state.numberOfJobsToShowPerPage;i++,count++){
+        eachPageJobCards.push(<Post post={this.state.postings[i]} key={this.state.postings[i]._id}/>)
       }
-    }).catch(err => {
-      console.log(`In catch of axios post call to listCompanyPostedJobs  api ${err}`);
-      window.alert('Error in CompanyHome component axios Post call');
-    });
+      return eachPageJobCards;
+    }
+    else return [];
   }
 
-  jobList(){
-    return this.state.postings.map((eachPost)=>{
-        //for each object in exercise we are returning an Exercise component and passing three props
-        return <Post post={eachPost} key={eachPost._id}/>
-    })
+  onPageChange(e){
+    console.log(e.target.value);
+    let currentPage = this.state.currentActivePage;
+    if (e.target.value === "next" ) {
+      currentPage += 1;
+    } else if (e.target.value === "prev") {
+      currentPage -= 1;
+    } else if(currentPage!==parseInt(e.target.value)) {
+        currentPage = parseInt(e.target.value);
+    } else return;
+    this.setState({
+        currentActivePage: currentPage
+    });
   }
 
   render() {
     if (!localStorage.getItem('userRole')) {
+      window.localStorage.clear();
+      window.sessionStorage.clear();
       window.location.href = '/';
+    }
+    let noRecordFoundMessage = "";
+    if(this.state.noRecord){
+      noRecordFoundMessage = <Alert variant="info">
+                You have not made any Job Postings.
+                </Alert>
+    } 
+    let pagesBar = null;
+    if(this.state.postings.length > 0) {
+      let totalPageCount = Math.ceil(this.state.postings.length / this.state.numberOfJobsToShowPerPage);
+      let allPages = []
+      for(let i=1; i<=totalPageCount;i++){
+        allPages.push(
+        <PaginationItem active={i===this.state.currentActivePage}>
+          <PaginationLink name={i} value={i} onClick={this.onPageChange}>
+            {i}
+          </PaginationLink>
+        </PaginationItem>);
+      }
+      pagesBar = <Pagination aria-label="Page navigation example">
+                    <PaginationItem disabled={this.state.currentActivePage===1}>
+                      <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
+                    </PaginationItem> 
+                    {allPages}
+                    <PaginationItem disabled={this.state.currentActivePage===totalPageCount}>
+                      <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
+                    </PaginationItem>
+                  </Pagination>
     }
     return (
       <div>
@@ -59,7 +115,10 @@ class CompanyHome extends React.Component{
                 <div className="col-md-8-CompanyHome">
                   <div className="educationCard">
                     <div className="experienceHeading">
-                    {this.jobList()}
+                      {noRecordFoundMessage}
+                      {this.jobList()}
+                      <br />
+                      {pagesBar}
                     </div>
                   </div>
                 </div>
@@ -77,4 +136,8 @@ class CompanyHome extends React.Component{
   }
 }
 
-export default CompanyHome;
+const mapStateToProps = state => ({
+  postedJobs: state.job.jobs
+});
+
+export default connect(mapStateToProps, { listCreatedJobs })(CompanyHome);

@@ -14,12 +14,10 @@ class Post extends React.Component{
   }
 
   showStudents(e){
-    //window.alert(`${this.props.post.job_post_id}`);
-    //sessionStorage.setItem('JobIdForAppliedStudents',this.props.post._id);
+    e.preventDefault();
     this.setState({
       redirectNav:<Redirect to={{pathname:'/AppliedStudentsInJob',state:{students:this.props.post.registeredStudents,jobId:this.props.post._id}}}/>
     })
-    //window.location.href = '/AppliedStudentsInJob';
   }
 
   capitalize(word){
@@ -27,6 +25,7 @@ class Post extends React.Component{
       word = word.split(' ').map((eachWord) => eachWord.charAt(0).toUpperCase() + eachWord.substring(1)).join(' ');
       return word;
     }
+    return '';
   }
 
   render(){

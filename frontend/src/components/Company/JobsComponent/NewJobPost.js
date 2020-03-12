@@ -3,11 +3,13 @@ import CustomNavBar from '../../NavBar/CustomNavBar';
 import './NewJobPost.css';
 import DatePicker from 'react-datepicker';
 import Dropdown from 'react-dropdown';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { Alert } from 'react-bootstrap';
 import {Col,FormGroup, Label} from 'reactstrap';
-import {serverIp, serverPort} from '../../../config';
+import { createJob, updateApplyForJobStatus } from '../../../actions/jobActions';
 import '../../../../node_modules/react-datepicker/dist/react-datepicker.css';
 import '../../../../node_modules/react-dropdown/style.css';
+import { CREATE_JOB_POST } from '../../../actions/types';
 
 class NewJobPost extends React.Component {
 
@@ -25,21 +27,17 @@ class NewJobPost extends React.Component {
       category:'',
       categoryOptions:['full time','part time','intern','on campus']
     }
-    this.onChangeTitleHandler = this.onChangeTitleHandler.bind(this);
+    
     this.onChangePostingDateHandler = this.onChangePostingDateHandler.bind(this);
     this.onChangeDeadlineHandler = this.onChangeDeadlineHandler.bind(this);
-    this.onChangeCityHandler = this.onChangeCityHandler.bind(this);
-    this.onChangeStateHandler = this.onChangeStateHandler.bind(this);
-    this.onChangeCountryHandler = this.onChangeCountryHandler.bind(this);
-    this.onChangeSalaryHandler = this.onChangeSalaryHandler.bind(this);
-    this.onChangeDescriptionHandler = this.onChangeDescriptionHandler.bind(this);
     this.onChangeCategoryHandler = this.onChangeCategoryHandler.bind(this);
     this.onPostSubmit = this.onPostSubmit.bind(this);
+    this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  onChangeTitleHandler(e){
+  onChangeHandler(e){
     this.setState({
-      title:e.target.value
+      [e.target.name]:e.target.value
     });
   }
 
@@ -52,36 +50,6 @@ class NewJobPost extends React.Component {
   onChangeDeadlineHandler(date) {
     this.setState({
       deadline:date
-    });
-  }
-
-  onChangeCityHandler(e){
-    this.setState({
-      city:e.target.value
-    });
-  }
-
-  onChangeStateHandler(e){
-    this.setState({
-      cstate:e.target.value
-    });
-  }
-
-  onChangeCountryHandler(e){
-    this.setState({
-      country:e.target.value
-    });
-  }
-
-  onChangeSalaryHandler(e){
-    this.setState({
-      salary:e.target.value
-    });
-  }
-
-  onChangeDescriptionHandler(e){
-    this.setState({
-      description:e.target.value
     });
   }
 
@@ -110,29 +78,24 @@ class NewJobPost extends React.Component {
         emailId: localStorage.getItem('email_id')
       }
       console.log(data)
-      axios.defaults.withCredentials = true;
-      axios.post(serverIp+':'+serverPort+'/createJobPost',data)
-      .then(response => {
-        console.log('NewJobPost Response Data');
-        console.log(response.data);
-        if (response.data === 'Error') {
-          window.alert('Error in Connecting to Database');
-        } else if(response.data === 'User Not Present'){
-          window.alert('User: '+localStorage.getItem('email_id')+', not Present in the database');
-        }else {
-          window.alert('Job Posted Successfully');
-          window.location.href = '/listPostings';
-        }
-      }).catch(err => {
-        console.log(`In catch of axios post call to createJobPost  api ${err}`);
-        window.alert('Error in NewJobPost component axios Post call');
-      })
+      this.props.createJob(data);
     }
   }
 
   render() {
     if (!localStorage.getItem('userRole')) {
+      localStorage.clear();
+      sessionStorage.clear();
       window.location.href = '/';
+    }
+    if(this.props.status.error || this.props.status.success){
+      if(this.props.status.error){
+        this.props.updateApplyForJobStatus({type:CREATE_JOB_POST, value:{}})
+        window.alert('Error in creating the given Job Posting');
+      } else if(this.props.status.success){
+        window.alert('Successfully created the given Job Posting');
+        window.location.href = '/listPostings';
+      }
     }
     return (
       <div>
@@ -151,11 +114,11 @@ class NewJobPost extends React.Component {
                           <div className="form-group">
                             <input type="text" 
                                     className="form-control" 
-                                    name="jobTitle" 
+                                    name="title" 
                                     placeholder="Job Title"
                                     pattern="^[a-zA-Z0-9]+([ .]{1}[a-zA-Z0-9]+)*$"
                                     title="Book Title can only contain letters, digits and single space character. It must start with alphanumeric characters only."
-                                    onChange={this.onChangeTitleHandler}
+                                    onChange={this.onChangeHandler}
                                     required 
                                     autoFocus/>
                           </div>
@@ -192,7 +155,7 @@ class NewJobPost extends React.Component {
                                     placeholder="Job City"
                                     pattern="^[a-zA-Z]+([ .]{1}[a-zA-Z]+)*$"
                                     title="It can only contain letters, single space character and period. It must start with letter only."
-                                    onChange={this.onChangeCityHandler}
+                                    onChange={this.onChangeHandler}
                                     required />
                             </div>
                           </Col>
@@ -200,11 +163,11 @@ class NewJobPost extends React.Component {
                           <div className="form-group">
                             <input type="text" 
                                   className="form-control" 
-                                  name="state" 
+                                  name="cstate" 
                                   placeholder="Job State"
                                   pattern="^[a-zA-Z]+([ .]{1}[a-zA-Z]+)*$"
                                   title="It can only contain letters, single space character and period. It must start with letter only."
-                                  onChange={this.onChangeStateHandler}
+                                  onChange={this.onChangeHandler}
                                   required />
                           </div>
                           </Col>
@@ -216,7 +179,7 @@ class NewJobPost extends React.Component {
                                     placeholder="Job Country"
                                     pattern="^[a-zA-Z]+([ .]{1}[a-zA-Z]+)*$"
                                     title="It can only contain letters, single space character and period. It must start with letter only."
-                                    onChange={this.onChangeCountryHandler}
+                                    onChange={this.onChangeHandler}
                                     required />
                             </div>
                           </Col>
@@ -229,7 +192,7 @@ class NewJobPost extends React.Component {
                                   name="salary" 
                                   placeholder="Annual Salary in USD"
                                   title="Please enter only digits."
-                                  onChange={this.onChangeSalaryHandler}
+                                  onChange={this.onChangeHandler}
                                   required />
                           </div>
                           </Col>
@@ -252,10 +215,9 @@ class NewJobPost extends React.Component {
                             <textarea
                                   rows="8"
                                   cols="80"
-                                  
-                                  name="jobDescription" 
+                                  name="description" 
                                   placeholder="Job Description"
-                                  onChange={this.onChangeDescriptionHandler}
+                                  onChange={this.onChangeHandler}
                                   required />
                           </Col>
                         </FormGroup>
@@ -274,4 +236,8 @@ class NewJobPost extends React.Component {
   }
 }
 
-export default NewJobPost;
+const mapStateToProps = state => ({
+  status: state.job.createJobPost
+});
+
+export default connect(mapStateToProps, { createJob, updateApplyForJobStatus })(NewJobPost);

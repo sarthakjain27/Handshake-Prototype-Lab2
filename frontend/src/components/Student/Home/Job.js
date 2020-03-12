@@ -1,19 +1,20 @@
 import React from 'react';
-import {Card, Modal, Image, Button} from 'react-bootstrap';
-import {Row, Col, Form, FormGroup, Label, Input, Media, FormText} from 'reactstrap';
-import axios from 'axios';
-import {serverIp, serverPort} from '../../../config';
+import {Card, Modal, Button} from 'react-bootstrap';
+import {Col, FormGroup, Label, FormText} from 'reactstrap';
+import { APPLY_FOR_JOB } from '../../../actions/types';
+import { connect } from 'react-redux';
+import { applyForJob, updateApplyForJobStatus } from '../../../actions/jobActions';
 import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 class Job extends React.Component{
   constructor(props){
     super(props);
-    this.capitalize = this.capitalize.bind(this);
-    this.applyForJob = this.applyForJob.bind(this);
     this.state = { 
       applicationShow:false,
       selectedFile:null
     }
+    this.capitalize = this.capitalize.bind(this);
+    this.applyForJob = this.applyForJob.bind(this);
     this.handleApplicationClose = this.handleApplicationClose.bind(this);
     this.resumeFileUploadHandler = this.resumeFileUploadHandler.bind(this);
     this.submitResume = this.submitResume.bind(this);
@@ -56,37 +57,39 @@ class Job extends React.Component{
       window.alert('Please upload your resume');
     } else {
       let fd = new FormData();
-      const config = { headers: { 'Content-Type': 'multipart/form-data'} };
       fd.append('jobPostId',this.props.job._id);
       fd.append('studentId',localStorage.getItem('email_id'));
       fd.append('companyName',this.props.job.name.toLowerCase());
       let dt = new Date();
       fd.append('date',(dt.getMonth()+1)+'/'+dt.getDate()+'/'+dt.getFullYear());
       fd.append('file',this.state.selectedFile);
-      axios.post(serverIp+':'+serverPort+'/applyForJob',fd,config)
-      .then(response => {
-        console.log('Response data from applyForJob post api call from Job.js inside Home of Student');
-        console.log(response.data);
-        if(response.data === 'Error'){
-          window.alert('Error while applying for the job');
-        } else if(response.data === 'Already applied'){
-          window.alert('You have already applied for this job previously');
-        } else {
-          window.alert('Successfully applied for the job');
-        }
-        this.setState({
-          applicationShow:false
-        })
-      }).catch(err => {
-        console.log(`Error in Job.js inside Home of Student while making applyForJob post api call`);
-        window.alert('Error in connecting to server');
-      })
+      this.props.applyForJob(fd);
     }
   }
 
   render(){
     if (!localStorage.getItem('userRole')) {
       window.location.href = '/';
+    }
+    if(this.state.applicationShow){
+      if(this.props.applyForJobStatus === 'Error'){
+        window.alert('Error while applying for the job');
+      } else if(this.props.applyForJobStatus === 'Already applied'){
+        window.alert('Applied again to the job with new Resume');
+      } else if(this.props.applyForJobStatus === 'Successfully Applied'){
+        window.alert('Successfully applied for the job');
+      } else if(this.props.applyForJobStatus === 'Error in making applyForJob axios call'){
+        window.alert('Error in connecting to server')
+      } else if(this.props.applyForJobStatus === 'Company Not Found'){
+        window.alert('Given company not found in database');
+      }
+      if(this.props.applyForJobStatus!==''){
+        this.setState({
+          applicationShow:false
+        },()=>{
+          this.props.updateApplyForJobStatus({type:APPLY_FOR_JOB, value:''});
+        })
+      }
     }
     return(
       <div>
@@ -145,4 +148,8 @@ class Job extends React.Component{
   }
 }
 
-export default Job;
+const mapStateToProps = state => ({
+  applyForJobStatus: state.job.applyForJob
+});
+
+export default connect(mapStateToProps, { applyForJob, updateApplyForJobStatus })(Job);
