@@ -17,7 +17,7 @@ class CompanyHome extends React.Component{
     this.onPageChange = this.onPageChange.bind(this);
   }
 
-  componentWillMount(){
+  componentDidMount(){
     this.props.listCreatedJobs({emailId:localStorage.getItem('email_id')});
   }
 
