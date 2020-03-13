@@ -14,7 +14,7 @@ const Config = require('./config');
 const Signup = require('./apis/signup');
 const Login = require('./apis/login');
 const JobComponent = require('./apis/jobComponent');
-// const EventComponent = require('./apis/eventComponent');
+const EventComponent = require('./apis/eventComponent');
 const ProfileComponent = require('./apis/profileComponent');
 // const SkillSetComponent = require('./apis/skillSetComponent');
 // const SearchComponent = require('./apis/searchComponent');
@@ -88,6 +88,14 @@ app.post('/applyForJob', studentResumeFileUpload.single('file'), (req, res) => {
 
 app.post('/updateAppliedStudentJobStatus', (req, res) => {
   JobComponent.updateAppliedStudentJobStatus(req, res);
+});
+
+app.post('/listCompanyCreatedEvents', (req, res) => {
+  EventComponent.listCompanyPostedEvents(req, res);
+});
+
+app.post('/createEvent', (req, res) => {
+  EventComponent.createEvent(req, res);
 })
 
 const server = app.listen(3001, () => {

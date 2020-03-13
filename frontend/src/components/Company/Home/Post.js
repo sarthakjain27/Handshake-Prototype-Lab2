@@ -17,7 +17,7 @@ class Post extends React.Component{
     e.preventDefault();
     this.setState({
       redirectNav:<Redirect to={{pathname:'/AppliedStudentsInJob',state:{students:this.props.post.registeredStudents,jobId:this.props.post._id}}}/>
-    })
+    });
   }
 
   capitalize(word){

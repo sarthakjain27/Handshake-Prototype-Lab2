@@ -1,4 +1,4 @@
-import { SEARCH_JOB, APPLY_FOR_JOB, COMPANY_POSTED_JOBS, CREATE_JOB_POST } from "./types";
+import { SEARCH_JOB, APPLY_FOR_JOB, COMPANY_POSTED_JOBS, CREATE_JOB_POST, CREATE_EVENT } from "./types";
 import { serverIp, serverPort } from '../config';
 import axios from "axios";
 
@@ -93,7 +93,7 @@ export const createJob = (data) => dispatch => {
   }))
   .catch(err => {
     console.log(`In catch of axios post call to createJobPost  api ${err}`);
-    window.alert('Error in NewJobPost component axios Post call');
+    window.alert('Error in createJob component axios Post call');
   })
 }
 

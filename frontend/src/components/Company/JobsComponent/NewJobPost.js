@@ -4,7 +4,6 @@ import './NewJobPost.css';
 import DatePicker from 'react-datepicker';
 import Dropdown from 'react-dropdown';
 import { connect } from 'react-redux';
-import { Alert } from 'react-bootstrap';
 import {Col,FormGroup, Label} from 'reactstrap';
 import { createJob, updateApplyForJobStatus } from '../../../actions/jobActions';
 import '../../../../node_modules/react-datepicker/dist/react-datepicker.css';
