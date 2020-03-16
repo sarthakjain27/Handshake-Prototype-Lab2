@@ -252,9 +252,48 @@ const updateAppliedStudentJobStatus = (req, res) => {
   })
 }
 
+const getAppliedJobs = (req, res) => {
+  console.log('Inside getAppliedJobs');
+  console.log(req.body);
+  const {emailId} = req.body;
+  company.find({}, function(error, results){
+    if(error){
+      console.log(error);
+      res.send('Error');
+    } if(results.length === 0){
+      console.log('No Company Available');
+      res.send('No Company Available');
+    }
+    const appliedJobs = [];
+    for(var result of results){
+      for(var eachPosting of result.jobPostings){
+        for(var eachStudent of eachPosting.registeredStudents){
+          if(eachStudent.studentId === emailId){
+            let obj = {
+                        profile_picture_url:result.profilePictureUrl,
+                        job_title:eachPosting.title,
+                        city:eachPosting.city,
+                        state:eachPosting.state,
+                        country:eachPosting.country,
+                        company_name:result.name,
+                        status:eachStudent.status,
+                        applying_date:eachStudent.applyingDate,
+                        application_deadline:eachPosting.deadlineDate
+                      }
+            appliedJobs.push(obj);
+            break;
+          }
+        }s
+      }
+    }
+    res.send(appliedJobs);
+  })
+}
+
 
 exports.listCompanyPostedJobs = listCompanyPostedJobs;
 exports.createJobPost = createJobPost;
 exports.getPostedJobs = getPostedJobs;
 exports.applyForJob = applyForJob;
 exports.updateAppliedStudentJobStatus = updateAppliedStudentJobStatus;
+exports.getAppliedJobs = getAppliedJobs;

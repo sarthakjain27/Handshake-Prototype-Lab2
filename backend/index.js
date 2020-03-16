@@ -86,6 +86,10 @@ app.post('/applyForJob', studentResumeFileUpload.single('file'), (req, res) => {
   JobComponent.applyForJob(req, res);
 });
 
+app.post('/getAppliedJobs', (req, res) => {
+  JobComponent.getAppliedJobs(req, res);
+});
+
 app.post('/updateAppliedStudentJobStatus', (req, res) => {
   JobComponent.updateAppliedStudentJobStatus(req, res);
 });
@@ -96,7 +100,19 @@ app.post('/listCompanyCreatedEvents', (req, res) => {
 
 app.post('/createEvent', (req, res) => {
   EventComponent.createEvent(req, res);
-})
+});
+
+app.post('/registerForEvent', (req, res) => {
+  EventComponent.registerForEvent(req, res);
+});
+
+app.post('/getSearchedEvent', (req, res) => {
+  EventComponent.getSearchedEvent(req, res);
+});
+
+app.post('/getRegisteredEvents', (req, res) => {
+  EventComponent.getRegisteredEvents(req, res);
+});
 
 const server = app.listen(3001, () => {
   console.log('Server listening on port 3001');
