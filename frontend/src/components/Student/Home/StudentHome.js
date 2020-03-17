@@ -41,7 +41,7 @@ class StudentHome extends React.Component {
     On the front end itself filter jobs from allJobs and put into filteredJobs
     always show jobs to user from filteredJobs array
   */
-  componentWillMount(){
+  componentDidMount(){
     this.props.searchJob({});
   }
 
@@ -51,7 +51,9 @@ class StudentHome extends React.Component {
 
       if(searchResult.noRecord){
           this.setState({
-              noRecord: searchResult.noRecord
+              noRecord: searchResult.noRecord,
+              allJobs:[],
+              filteredJobs:[]
           });
       } else {
           this.setState({
@@ -94,13 +96,17 @@ class StudentHome extends React.Component {
 
   findJobsSearchHandler(e){
     e.preventDefault();
-    const data = {};
-    if(this.state.selectedOption === 'Company Name'){
-      data['companyName'] = this.state.searchValue;
-    } else if(this.state.selectedOption === 'Job Title'){
-      data['title'] = this.state.searchValue;
+    if(this.state.selectedOption!=='Company Name' && this.state.selectedOption!=='Job Title'){
+      window.alert('Please select category from dropdown');
+    } else {
+      const data = {};
+      if(this.state.selectedOption === 'Company Name'){
+        data['companyName'] = this.state.searchValue;
+      } else if(this.state.selectedOption === 'Job Title'){
+        data['title'] = this.state.searchValue;
+      }
+      this.props.searchJob(data);
     }
-    this.props.searchJob(data);
   }
 
   handleApplyFilter(e){

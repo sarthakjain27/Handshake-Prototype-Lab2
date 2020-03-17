@@ -1,4 +1,4 @@
-import { SEARCH_JOB, APPLY_FOR_JOB, COMPANY_POSTED_JOBS, CREATE_JOB_POST, CREATE_EVENT } from "./types";
+import { SEARCH_JOB, APPLY_FOR_JOB, COMPANY_POSTED_JOBS, CREATE_JOB_POST, CREATE_EVENT, APPLIED_JOBS } from "./types";
 import { serverIp, serverPort } from '../config';
 import axios from "axios";
 
@@ -95,6 +95,29 @@ export const createJob = (data) => dispatch => {
     console.log(`In catch of axios post call to createJobPost  api ${err}`);
     window.alert('Error in createJob component axios Post call');
   })
+}
+
+export const listAppliedJobs = (data) => dispatch => {
+  axios.post(serverIp+':'+serverPort+'/getAppliedJobs',data)
+  .then(response => {
+    if(response.data){
+      if(response.data === 'Error' || response.data === 'No Company Available' || response.data.length === 0){
+        return {
+          noRecord: true
+        };
+      } else {
+        return {
+          jobList: response.data
+        };
+      }
+    }
+  }).then(search_result => dispatch({
+    type: APPLIED_JOBS,
+    payload: search_result
+  }))
+  .catch(err => {
+    console.log('Error in listAppliedJobs in jobActions.js '+err);
+  });
 }
 
 export const updateApplyForJobStatus = (data) => dispatch => {

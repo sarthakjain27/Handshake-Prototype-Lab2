@@ -16,6 +16,11 @@ export default function (state = initialState, action) {
           ...state,
           createEvent: action.payload
         }
+      case SEARCH_EVENT:
+        return {
+            ...state,
+            events: action.payload
+        };
       default:
           return state;
   }

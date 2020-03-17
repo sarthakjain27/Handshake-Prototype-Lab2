@@ -1,4 +1,4 @@
-import { REGISTERED_STUDENTS } from './types';
+import { REGISTERED_STUDENTS, STUDENT_EDUCATION } from './types';
 import { serverIp, serverPort } from '../config';
 import axios from "axios";
 
@@ -25,4 +25,16 @@ export const getStudentProfileAppliedInJob = (data) => dispatch => {
       window.alert('Error in connecting to server');
     });
   })
+}
+
+export const getStudentAllEducation = (data) => dispatch => {
+  axios.post(`${serverIp}:${serverPort}/getStudentAllEducation`, data)
+  .then((resp) => {
+    console.log('getStudentAllEducation');
+    console.log(resp.data);
+    sessionStorage.setItem('educationSetFromListEvents', JSON.stringify(resp.data.educations));
+  }).catch((err) => {
+    console.log(`Error in getStudentAllEducation post call in profileActions.js: ${err}`);
+    window.alert('Error in connecting to server');
+  });
 }

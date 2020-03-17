@@ -105,7 +105,7 @@ const getPostedJobs = (req, res) => {
         let resultToSend = [];
         result.forEach((eachCompany)=>{
           eachCompany.jobPostings.forEach((eachPosting)=>{
-            if(eachPosting.title.includes(req.body.title)){
+            if(eachPosting.title.includes(req.body.title.toLowerCase())){
               // Since eachPost itself would have _id so changing company's _id to _idCompany
               let each = {
                 _idCompany:eachCompany._id,
@@ -266,6 +266,7 @@ const getAppliedJobs = (req, res) => {
     }
     const appliedJobs = [];
     for(var result of results){
+      //console.log(result);
       for(var eachPosting of result.jobPostings){
         for(var eachStudent of eachPosting.registeredStudents){
           if(eachStudent.studentId === emailId){
@@ -283,9 +284,10 @@ const getAppliedJobs = (req, res) => {
             appliedJobs.push(obj);
             break;
           }
-        }s
+        }
       }
     }
+    console.log(appliedJobs);
     res.send(appliedJobs);
   })
 }

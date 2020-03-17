@@ -1,4 +1,4 @@
-import { SEARCH_JOB, APPLY_FOR_JOB, COMPANY_POSTED_JOBS, CREATE_JOB_POST } from '../actions/types';
+import { SEARCH_JOB, APPLY_FOR_JOB, COMPANY_POSTED_JOBS, CREATE_JOB_POST, APPLIED_JOBS } from '../actions/types';
 const initialState = {
   jobs: {},
   applyForJob: '',
@@ -26,6 +26,11 @@ export default function (state = initialState, action) {
         return {
           ...state,
           createJobPost: action.payload
+        }
+      case APPLIED_JOBS:
+        return {
+          ...state,
+          jobs: action.payload
         }
       default:
           return state;

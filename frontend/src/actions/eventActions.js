@@ -50,3 +50,49 @@ export const createEvent = (data) => dispatch => {
     window.alert('Error in createEvent component axios Post call');
   })
 }
+
+export const searchEvent = (data) => dispatch => {
+  axios.post(serverIp+':'+serverPort+'/getSearchedEvent',data)
+  .then(response => {
+    if(response.data){
+      if(response.data.length === 0){
+        return {
+          noRecord: true
+        };
+      } else {
+        return {
+          eventList: response.data
+        };
+      }
+    }
+  }).then(search_result => dispatch({
+    type: SEARCH_EVENT,
+    payload: search_result
+  }))
+  .catch(err => {
+    console.log('Error in searchEvent in eventActions.js '+err);
+  });
+}
+
+export const getRegisteredEvents = (data) => dispatch => {
+  axios.post(serverIp+':'+serverPort+'/getRegisteredEvents',data)
+  .then(response => {
+    if(response.data){
+      if(response.data.length === 0){
+        return {
+          noRecord: true
+        };
+      } else {
+        return {
+          eventList: response.data
+        };
+      }
+    }
+  }).then(search_result => dispatch({
+    type: SEARCH_EVENT,
+    payload: search_result
+  }))
+  .catch(err => {
+    console.log('Error in getRegisteredEvents in eventActions.js '+err);
+  });
+}

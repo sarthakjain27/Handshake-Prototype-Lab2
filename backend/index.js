@@ -110,6 +110,10 @@ app.post('/getSearchedEvent', (req, res) => {
   EventComponent.getSearchedEvent(req, res);
 });
 
+app.post('/getStudentAllEducation', (req, res) => {
+  ProfileComponent.getStudentEducation(req, res);
+});
+
 app.post('/getRegisteredEvents', (req, res) => {
   EventComponent.getRegisteredEvents(req, res);
 });
