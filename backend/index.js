@@ -65,7 +65,24 @@ app.post('/getStudentInfo', (req, res) => {
 
 app.post('/getCompanyInfo', (req, res) => {
   ProfileComponent.getCompanyInfo(req,res);
-})
+});
+
+const companyProfilePictureStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, './ProfilePictures/Company');
+  },
+  filename(req, file, cb) {
+    console.log('Inside filename');
+    console.log(req.body)
+    cb(null, `company_${req.body.emailId}.${file.originalname.split('.')[file.originalname.split('.').length - 1]}`);
+  },
+});
+
+const companyProfilePictureUpload = multer({ storage: companyProfilePictureStorage });
+
+app.post('/updateCompanyProfile', companyProfilePictureUpload.single('file'), (req, res) => {
+  ProfileComponent.companyUpdateProfile(req, res);
+});
 
 app.post('/getPostedJobs', (req, res) => {
   JobComponent.getPostedJobs(req, res);

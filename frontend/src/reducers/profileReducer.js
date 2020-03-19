@@ -1,6 +1,7 @@
-import { REGISTERED_STUDENTS } from '../actions/types';
+import { REGISTERED_STUDENTS, COMPANY_PROFILE } from '../actions/types';
 const initialState = {
-  registeredStudents: {}
+  registeredStudents: {},
+  companyProfile: {}
 }
 
 export default function (state = initialState, action) {
@@ -10,6 +11,11 @@ export default function (state = initialState, action) {
               ...state,
               registeredStudents: action.payload
           };
+      case COMPANY_PROFILE:
+        return{
+          ...state,
+          companyProfile:action.payload
+        }
       default:
           return state;
   }
