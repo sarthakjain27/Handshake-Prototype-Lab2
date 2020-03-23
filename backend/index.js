@@ -42,7 +42,6 @@ app.use(express.static('./WebsiteImages'));
 
 
 
-
 app.post('/signup', (req, res) => {
   Signup.signup(req, res, bcrypt, saltRounds);
 });
@@ -131,8 +130,53 @@ app.post('/getStudentAllEducation', (req, res) => {
   ProfileComponent.getStudentEducation(req, res);
 });
 
+const studentProfilePictureStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, './ProfilePictures/Student');
+  },
+  filename(req, file, cb) {
+    console.log('Inside filename');
+    console.log(req.body)
+    cb(null, `student_${req.body.emailId}.${file.originalname.split('.')[file.originalname.split('.').length - 1]}`);
+  },
+});
+
+const studentProfilePictureUpload = multer({ storage: studentProfilePictureStorage });
+
+app.post('/updateStudentProfile', studentProfilePictureUpload.single('file'), (req, res) => {
+  ProfileComponent.studentUpdateProfile(req, res);
+});
+
+app.post('/createEducation', (req, res) => {
+  ProfileComponent.createEducation(req, res);
+});
+
+app.post('/updateEducation', (req, res) => {
+  ProfileComponent.updateEducation(req, res);
+});
+
+app.post('/deleteEducation', (req, res) => {
+  ProfileComponent.deleteEducation(req, res);
+});
+
+app.post('/createProfessionalExperience', (req, res) => {
+  ProfileComponent.createExperience(req, res);
+});
+
+app.post('/updateProfessionalExperience', (req, res) => {
+  ProfileComponent.updateExperience(req, res);
+});
+
+app.post('/deleteProfessionalExperience', (req, res) => {
+  ProfileComponent.deleteExperience(req, res);
+});
+
 app.post('/getRegisteredEvents', (req, res) => {
   EventComponent.getRegisteredEvents(req, res);
+});
+
+app.post('/updateSkills', (req, res) => {
+  ProfileComponent.updateSkillSet(req, res);
 });
 
 const server = app.listen(3001, () => {

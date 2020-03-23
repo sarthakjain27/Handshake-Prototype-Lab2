@@ -1,0 +1,81 @@
+.main-div-studentProfile {
+  margin: 0 auto;
+  min-width: 320px;
+  padding: 24px 16px 0;
+}
+
+.main-relative-div-studentProfile {
+  position: relative;
+}
+
+.row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.col-md-4 {
+  width: 33.33333%;
+}
+
+.col-md-8 {
+  width: 66.66667%;
+}
+
+.educationCardStudentProfile {
+  margin-bottom: 24px;
+  font-family: sans-serif;
+  color: rgba(0,0,0,.8);
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+  box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+  border-color: #1585e0;
+  border-style: inset;
+  border-width: thin;
+}
+
+.educationCardSkillSet {
+  margin-bottom: 24px;
+  font-family: sans-serif;
+  color: rgba(0,0,0,.8);
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+  box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+  border-color: #1585e0;
+  border-style: inset;
+  border-width: thin;
+}
+
+.experienceCardStudentProfile {
+  margin-bottom: 24px;
+  font-family: sans-serif;
+  color: rgba(0,0,0,.8);
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+  box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+  border-color: #1585e0;
+  border-style: inset;
+  border-width: thin;
+}
+
+.experienceHeading {
+  padding: 24px;
+}
+
+.style__card-item___B1f7m {
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.style__card-button___1X6wz {
+  color: #000;
+  text-align: center;
+}
+
+.style__plain___13WSa {
+  background: rgba(0,0,0,0);
+  border: 0;
+  color: #1569e0;
+}
