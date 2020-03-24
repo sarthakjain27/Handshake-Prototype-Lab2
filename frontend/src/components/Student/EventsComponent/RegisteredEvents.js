@@ -1,6 +1,4 @@
 import React from 'react';
-import axios from 'axios';
-import { serverIp, serverPort } from '../../../config';
 import { connect } from 'react-redux';
 import { Alert } from 'react-bootstrap';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';

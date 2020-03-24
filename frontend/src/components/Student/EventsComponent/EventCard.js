@@ -5,7 +5,8 @@ import {
 import {
   Tooltip,
 } from 'reactstrap';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { registerForEvent } from '../../../actions/eventActions';
 import { serverIp, serverPort } from '../../../config';
 import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -15,6 +16,7 @@ class EventCard extends React.Component {
     this.state = {
       tooltipOpen: false,
     };
+    console.log('-----EventCard Props-----');
     console.log(props);
     console.log(typeof props.event.eligibility);
     //console.log(JSON.parse(props.event.eligibility));
@@ -57,21 +59,7 @@ class EventCard extends React.Component {
 
   registerForEvent(e) {
     e.preventDefault();
-    axios.post(`${serverIp}:${serverPort}/registerForEvent`, { studentId: localStorage.getItem('student_id'), eventId: this.props.event.event_id })
-      .then((response) => {
-        console.log('registerForEvent response data');
-        console.log(response.data);
-        if (response.data === 'Error') {
-          window.alert('Error in registering. Please try later');
-        } else if (response.data === 'Already applied') {
-          window.alert('You have already registered for this event.');
-        } else {
-          window.alert('Successfully Registered.');
-        }
-      }).catch((err) => {
-        console.log(`Error in registerForEvent post call in EventCard of Student: ${err}`);
-        window.alert('Error while connecting to server');
-      });
+    this.props.registerForEvent({ studentId: localStorage.getItem('email_id'), eventId: this.props.event._idEvent })
   }
 
   render() {
@@ -82,14 +70,19 @@ class EventCard extends React.Component {
     if (this.props.showRegisterButton) {
       let eligible = false;
       const currentYear = (new Date()).getFullYear();
-      const studentEducation = JSON.parse(sessionStorage.getItem('educationSetFromListEvents'));
-      //const eligibilityMajors = this.props.event.eligibility.toLowerCase().split(',');
-      const eligibilityMajors = this.props.event.eligibility;
-      console.log(eligibilityMajors);
-      for (const i of studentEducation) {
-        if ((parseInt(i.year_of_passing) >= currentYear) && (eligibilityMajors.includes(i.major))) {
-          eligible = true;
-          break;
+      let studentEducation = []
+      if(JSON.parse(sessionStorage.getItem('educationSetFromListEvents'))!==null){
+        studentEducation = JSON.parse(sessionStorage.getItem('educationSetFromListEvents'));
+        console.log('---studentEducation in EventCard ---');
+        console.log(studentEducation);
+        //const eligibilityMajors = this.props.event.eligibility.toLowerCase().split(',');
+        const eligibilityMajors = this.props.event.eligibility;
+        console.log(eligibilityMajors);
+        for (const i of studentEducation) {
+          if ((parseInt(i.yearOfPassing) >= currentYear) && (eligibilityMajors.includes(i.major))) {
+            eligible = true;
+            break;
+          }
         }
       }
       if (eligible) {
@@ -175,4 +168,8 @@ class EventCard extends React.Component {
   }
 }
 
-export default EventCard;
+const mapStateToProps = state => ({
+  
+});
+
+export default connect(mapStateToProps, { registerForEvent })(EventCard);

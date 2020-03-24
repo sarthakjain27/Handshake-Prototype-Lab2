@@ -96,3 +96,23 @@ export const getRegisteredEvents = (data) => dispatch => {
     console.log('Error in getRegisteredEvents in eventActions.js '+err);
   });
 }
+
+export const registerForEvent = (data) => dispatch => {
+  axios.post(`${serverIp}:${serverPort}/registerForEvent`, data)
+  .then((response) => {
+    console.log('registerForEvent response data');
+    console.log(response.data);
+    if (response.data === 'Error') {
+      window.alert('Error in registering. Please try later!');
+    } else if (response.data === 'Already applied') {
+      window.alert('You have already registered for this event.');
+    } else if(response.data === 'Success') {
+      window.alert('Successfully Registered.');
+    } else {
+      window.alert('Error in registering. Please try later!');
+    }
+  }).catch((err) => {
+    console.log(`Error in registerForEvent post call in EventCard of Student: ${err}`);
+    window.alert('Error while connecting to server');
+  });
+}

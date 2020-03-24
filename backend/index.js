@@ -179,6 +179,10 @@ app.post('/updateSkills', (req, res) => {
   ProfileComponent.updateSkillSet(req, res);
 });
 
+app.post('/getStudentsRegisteredInAEvent', (req, res) => {
+  EventComponent.getStudentsRegisteredInAEvent(req, res);
+})
+
 const server = app.listen(3001, () => {
   console.log('Server listening on port 3001');
 });

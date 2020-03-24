@@ -13,9 +13,33 @@ export const getStudentProfileAppliedInJob = (data) => dispatch => {
         window.alert('Error in Querying Database');
       } else if(response.data === 'User Not Present'){
         window.alert(eachStudent.studentId+' student not present in database');
-      } else{
+      } else {
         const each = {...response.data,status:eachStudent.status,resumeFileUrl:eachStudent.resumeFileUrl,applyingDate:eachStudent.applyingDate,jobApplicationId:eachStudent._id};
         profiles.push(each);
+      }
+    }).then(()=>dispatch({
+      type: REGISTERED_STUDENTS,
+      payload: {registeredStudents:profiles}
+    })).catch(err => {
+      console.log(`Error in componentDidMount of JobAppliedStudents: ${err}`);
+      window.alert('Error in connecting to server');
+    });
+  })
+}
+
+export const getStudentProfileAppliedInEvent = (data) => dispatch => {
+  let profiles = [];
+  data.forEach((eachStudent)=>{
+    axios.post(serverIp+':'+serverPort+'/getStudentInfo',{emailId:eachStudent})
+    .then(response => {
+      console.log('getStudentProfileAppliedInEvent Response data in componentDidMount');
+      console.log(response.data);
+      if(response.data === 'Error'){
+        window.alert('Error in Querying Database');
+      } else if(response.data === 'User Not Present'){
+        window.alert(eachStudent.studentId+' student not present in database');
+      } else {
+        profiles.push(response.data);
       }
     }).then(()=>dispatch({
       type: REGISTERED_STUDENTS,

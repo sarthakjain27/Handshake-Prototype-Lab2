@@ -134,19 +134,19 @@ const getSearchedEvent = (req, res) => {
       }
     });
   }
-}
+};
 
 const registerForEvent = (req, res) => {
   console.log('Inside registerForEvent');
   console.log(req.body);
-  const { eventId, studentId, companyName } = req.body;
-  company.findOne({name:companyName},function(error,result){
+  const { eventId, studentId } = req.body;
+  company.findOne({"eventPostings._id":eventId},function(error,result){
     if(error){
       console.log(error);
       res.send('Error');
     } if(result === null){
-      console.log(companyName+' Company Not Found');
-      res.send('Company Not Found');
+      console.log('No event with given _id');
+      res.send('Error');
     }
     let i=0;
     let alreadyApplied = false;
@@ -170,53 +170,65 @@ const registerForEvent = (req, res) => {
           console.log(error);
           res.send('Error');
         }
-        res.send('Successfully Applied');
+        res.send('Success');
       });
     }
   });
-}
+};
 
 const getRegisteredEvents = (req, res) => {
   console.log('Inside getRegisteredEvents');
   const {emailId} = req.body;
   company.find({}, function(error, results){
     if(error){
-      console.log(error);
-      res.send('Error');
+      console.log('Error in querying the db: '+error);
+      res.send([]);
     } if(results.length === 0){
       console.log('No Company Available');
-      res.send('No Company Available');
+      res.send([]);
     }
     const appliedEvents = [];
     for(var result of results){
       for(var eachPosting of result.eventPostings){
-        for(var eachStudent of eachPosting.registeredStudents){
-          if(eachStudent.studentId === emailId){
-            let obj = {
-                        profile_picture_url:result.profilePictureUrl,
-                        company_name:result.name,
-                        _idCompany:result._id,
-                        emailId:result.emailId,
-                        _idEvent:eachPosting._id,
-                        eligibility:eachPosting.eligibility,
-                        eventName:eachPosting.name,
-                        description:eachPosting.description,
-                        date:eachPosting.date,
-                        time:eachPosting.time,
-                        street:eachPosting.street,
-                        city:eachPosting.city,
-                        state:eachPosting.state,
-                        country:eachPosting.country,
-                        zipcode:eachPosting.zipcode,
-                      }
-            appliedEvents.push(obj);
-            break;
+        if(eachPosting.registeredStudents.includes(emailId)){
+          let obj = {
+            profile_picture_url:result.profilePictureUrl,
+            name:result.name,
+            _idCompany:result._id,
+            emailId:result.emailId,
+            _idEvent:eachPosting._id,
+            eligibility:eachPosting.eligibility,
+            eventName:eachPosting.name,
+            description:eachPosting.description,
+            date:eachPosting.date,
+            time:eachPosting.time,
+            street:eachPosting.street,
+            city:eachPosting.city,
+            state:eachPosting.state,
+            country:eachPosting.country,
+            zipcode:eachPosting.zipcode,
           }
+          appliedEvents.push(obj);
         }
       }
     }
     res.send(appliedEvents);
   });
+};
+
+const getStudentsRegisteredInAEvent = (req, res) => {
+  console.log('Inside getStudentsRegisteredInAEvent');
+  console.log(req.body);
+  const { eventId, emailId } = req.body;
+  company.findOne({"eventPostings._id":eventId,"emailId":emailId},function(error,result){
+    if(error){
+      console.log(error);
+      res.send('Error');
+    } if(result === null){
+      console.log('No event with given _id');
+      res.send('Error');
+    } else res.send(result.eventPostings.registeredStudents);
+  })
 }
 
 exports.listCompanyPostedEvents = listCompanyPostedEvents;
@@ -224,3 +236,4 @@ exports.createEvent = createEvent;
 exports.getSearchedEvent = getSearchedEvent;
 exports.registerForEvent = registerForEvent;
 exports.getRegisteredEvents = getRegisteredEvents;
+exports.getStudentsRegisteredInAEvent = getStudentsRegisteredInAEvent;

@@ -173,7 +173,7 @@ const createEducation = (req, res) => {
     state: req.body.cstate.toLowerCase(),
     country: req.body.country.toLowerCase(),
     degree: req.body.degree.toLowerCase(),
-    major: req.body.major.toLowerCase(),
+    major: req.body.major,
     yearOfPassing: req.body.yearOfPassing,
     cgpa: req.body.cgpa
   }
@@ -309,7 +309,7 @@ const updateEducation = (req, res) => {
     state: req.body.cstate.toLowerCase(),
     country: req.body.country.toLowerCase(),
     degree: req.body.degree.toLowerCase(),
-    major: req.body.major.toLowerCase(),
+    major: req.body.major,
     yearOfPassing: req.body.yearOfPassing,
     cgpa: req.body.cgpa
   }

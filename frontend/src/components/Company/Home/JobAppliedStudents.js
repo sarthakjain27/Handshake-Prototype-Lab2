@@ -51,9 +51,9 @@ class JobAppliedStudents extends React.Component{
     console.log(nextProps);
     if(nextProps.registeredStudentsProfile){
       var { registeredStudentsProfile } = nextProps;
-      if(registeredStudentsProfile.noRecord){
+      if(registeredStudentsProfile.registeredStudents.length === 0){
           this.setState({
-              noRecord: registeredStudentsProfile.noRecord
+              noRecord: true
           });
       } else {
           this.setState({
@@ -127,7 +127,7 @@ class JobAppliedStudents extends React.Component{
                               alt='Student Profile Picture'
                               roundedCircle
                               style={{height:40, width:40}}/> {' '}
-                    <a href={'/StudentProfile/'+eachStudent._id}>{this.capitalize(eachStudent.name)}</a> 
+                    <a href={'/StudentProfile/'+eachStudent.emailId}>{this.capitalize(eachStudent.name)}</a> 
                     {' '}
                     <Button variant="info" onClick={()=>this.showStudentResume(eachStudent.resumeFileUrl,eachStudent.name)}>Resume</Button>
                     {' '}
