@@ -16,8 +16,7 @@ const Login = require('./apis/login');
 const JobComponent = require('./apis/jobComponent');
 const EventComponent = require('./apis/eventComponent');
 const ProfileComponent = require('./apis/profileComponent');
-// const SkillSetComponent = require('./apis/skillSetComponent');
-// const SearchComponent = require('./apis/searchComponent');
+const SearchComponent = require('./apis/searchComponent');
 
 const app = express();
 // setting view engine
@@ -181,7 +180,11 @@ app.post('/updateSkills', (req, res) => {
 
 app.post('/getStudentsRegisteredInAEvent', (req, res) => {
   EventComponent.getStudentsRegisteredInAEvent(req, res);
-})
+});
+
+app.post('/searchStudents', (req, res) => {
+  SearchComponent.companySearchForStudents(req, res);
+});
 
 const server = app.listen(3001, () => {
   console.log('Server listening on port 3001');

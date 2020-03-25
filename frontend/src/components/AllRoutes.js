@@ -15,6 +15,7 @@ import NewEventPost from './Company/EventComponent/NewEventPost';
 import CompanyProfile from './Company/Profile/CompanyProfile';
 import EditCompanyProfile from './Company/Profile/Profile';
 import EventRegisteredStudents from './Company/EventComponent/EventRegisteredStudents';
+import SearchStudents from './Company/SearchStudents/SearchStudents';
 
 // Student Components import
 import StudentHome from './Student/Home/StudentHome';
@@ -27,6 +28,7 @@ import AddProfessionalExperienceStudent from './Student/Profile/AddExperience';
 import AddEducationStudent from './Student/Profile/AddEducation';
 import EditStudentProfessionalExperience from './Student/Profile/EditExperience';
 import EditStudentEducation from './Student/Profile/EditEducation';
+import StudentSearchStudents from './Student/SearchStudents/SearchStudents';
 
 class AllRoutes extends React.Component {
   render() {
@@ -43,6 +45,7 @@ class AllRoutes extends React.Component {
         <Route exact path="/companyProfile" component={CompanyProfile} />
         <Route exact path="/editCompanyProfile" component={EditCompanyProfile} />
         <Route exact path="/RegisteredStudentsInEvent" component={EventRegisteredStudents} />
+        <Route exact path="/searchStudents" component={SearchStudents} />
 
         <Route exact path="/viewPostedJobs" component={StudentHome} />
         <Route exact path="/appliedJobs" component={AppliedJobs} />
@@ -56,6 +59,7 @@ class AllRoutes extends React.Component {
         <Route exact path="/editStudentEducation" component={EditStudentEducation} />
         <Route exact path="/viewCompanyProfile/:id" component={CompanyProfile} />
         <Route exact path="/StudentProfile/:id" component={StudentProfile} />
+        <Route exact path="/studentSearchStudents" component={StudentSearchStudents} />
       </div>
     );
   }

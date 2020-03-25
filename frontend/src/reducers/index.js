@@ -4,11 +4,13 @@ import signupReducer from './signupReducer';
 import jobReducer from './jobReducer';
 import profileReducer from './profileReducer';
 import eventReducer from './eventReducer';
+import searchReducer from './searchReducer';
 
 export default combineReducers({
   login:loginReducer,
   signup:signupReducer,
   job:jobReducer,
   profile:profileReducer,
-  event:eventReducer
+  event:eventReducer,
+  search:searchReducer
 });
