@@ -1,8 +1,8 @@
 import React from 'react';
 import './StudentProfile.css';
-import { Tooltip } from 'reactstrap';
+import { Tooltip, Col, FormGroup, Label, FormText, Input } from 'reactstrap';
 import {
-  Card, Button,
+  Card, Button, Modal
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { getStudentProfile, updateSkills } from '../../../actions/profileActions';
@@ -32,6 +32,8 @@ class StudentProfile extends React.Component {
         { label: 'AWS', value: 'aws' }],
       selectedSkills: [],
       tooltipOpen: false,
+      messageModalShow:false,
+      message:''
     };
     this.capitalize = this.capitalize.bind(this);
     this.editBasicDetails = this.editBasicDetails.bind(this);
@@ -43,6 +45,10 @@ class StudentProfile extends React.Component {
     this.skillChangeHandler = this.skillChangeHandler.bind(this);
     this.updateSkills = this.updateSkills.bind(this);
     this.onToggle = this.onToggle.bind(this);
+    this.messageModalShowChangeHandler = this.messageModalShowChangeHandler.bind(this);
+    this.submitMessage = this.submitMessage.bind(this);
+    this.handleApplicationClose = this.handleApplicationClose.bind(this);
+    this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
   componentDidMount() {
@@ -68,6 +74,29 @@ class StudentProfile extends React.Component {
         //window.location.reload();
       });
     }
+  }
+
+  onChangeHandler(e){
+    this.setState({
+      [e.target.name]:e.target.value
+    });
+  }
+
+  handleApplicationClose(){
+    this.setState({
+      messageModalShow:false
+    });
+  }
+
+  messageModalShowChangeHandler(e){
+    e.preventDefault();
+    this.setState({
+      messageModalShow:true
+    });
+  }
+
+  submitMessage(e){
+    e.preventDefault();
   }
 
   onToggle() {
@@ -285,76 +314,113 @@ class StudentProfile extends React.Component {
         profileSrc = this.state.basicDetails.profile_picture_url;
       }
       profile = (
-        <div className="main-div-studentProfile">
-          <div className="main-relative-div-studentProfile">
-            <div className="row">
-              <div className="col-md-4">
-                <Card border="primary">
-                  <Card.Img variant="top" src={`${serverIp}:${serverPort}/${profileSrc}`} alt="Profile Picture" style={{ height: 300 }} />
-                  <Card.Body>
-                    <Card.Title>{this.capitalize(this.state.basicDetails.student_name)}</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">
-                      Date of Birth:
+        <div>
+          <div className="main-div-studentProfile">
+            <div className="main-relative-div-studentProfile">
+              <div className="row">
+                <div className="col-md-4">
+                  <Card border="primary">
+                    <Card.Img variant="top" src={`${serverIp}:${serverPort}/${profileSrc}`} alt="Profile Picture" style={{ height: 300 }} />
+                    <Card.Body>
+                      <Card.Title>{this.capitalize(this.state.basicDetails.student_name)}
                       {' '}
-                      {this.capitalize(this.state.basicDetails.date_of_birth)}
+                      <Button variant="primary" onClick={this.messageModalShowChangeHandler}>
+                        Message
+                      </Button>
+                      </Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        Date of Birth:
+                        {' '}
+                        {this.capitalize(this.state.basicDetails.date_of_birth)}
+                        {' '}
+                        <br />
+                        {this.capitalize(this.state.basicDetails.college_name)}
+                        {' '}
+                        <br />
+                        {this.capitalize(this.state.basicDetails.city)}
+                        ,
+                        {this.capitalize(this.state.basicDetails.state)}
+                        ,
+                        {this.capitalize(this.state.basicDetails.country)}
+                      </Card.Subtitle>
+                      <Card.Text>
+                        {this.state.basicDetails.career_objective}
+                      </Card.Text>
+                    </Card.Body>
+                    <Card.Footer>
+                      <small className="text-muted">
+                        {' '}
+                        <b>Contact Phone:</b>
+                        {' '}
+                        {this.state.basicDetails.contact_phone}
+                      </small>
                       {' '}
                       <br />
-                      {this.capitalize(this.state.basicDetails.college_name)}
-                      {' '}
-                      <br />
-                      {this.capitalize(this.state.basicDetails.city)}
-                      ,
-                      {this.capitalize(this.state.basicDetails.state)}
-                      ,
-                      {this.capitalize(this.state.basicDetails.country)}
-                    </Card.Subtitle>
-                    <Card.Text>
-                      {this.state.basicDetails.career_objective}
-                    </Card.Text>
-                  </Card.Body>
-                  <Card.Footer>
-                    <small className="text-muted">
-                      {' '}
-                      <b>Contact Phone:</b>
-                      {' '}
-                      {this.state.basicDetails.contact_phone}
-                    </small>
-                    {' '}
-                    <br />
-                    <small className="text-muted">
-                      <b>Contact Email:</b>
-                      {' '}
-                      {this.state.basicDetails.contact_email}
-                    </small>
-                  </Card.Footer>
-                </Card>
-                <br />
-                <div className="educationCardSkillSet">
-                  <div className="experienceHeading">
-                    <h2>Student Skill Set</h2>
-                    {this.displaySkills()}
+                      <small className="text-muted">
+                        <b>Contact Email:</b>
+                        {' '}
+                        {this.state.basicDetails.contact_email}
+                      </small>
+                    </Card.Footer>
+                  </Card>
+                  <br />
+                  <div className="educationCardSkillSet">
+                    <div className="experienceHeading">
+                      <h2>Student Skill Set</h2>
+                      {this.displaySkills()}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-md-8">
-                <div className="educationCardStudentProfile">
-                  <div className="experienceHeading">
-                    <h2>Education</h2>
+                <div className="col-md-8">
+                  <div className="educationCardStudentProfile">
+                    <div className="experienceHeading">
+                      <h2>Education</h2>
+                    </div>
+                    <div className="experienceHeading">
+                      {this.displayEducation()}
+                    </div>
                   </div>
-                  <div className="experienceHeading">
-                    {this.displayEducation()}
-                  </div>
-                </div>
-                <div className="experienceCardStudentProfile">
-                  <div className="experienceHeading">
-                    <h2>Professional Experience</h2>
-                  </div>
-                  <div className="experienceHeading">
-                    {this.displayExperience()}
+                  <div className="experienceCardStudentProfile">
+                    <div className="experienceHeading">
+                      <h2>Professional Experience</h2>
+                    </div>
+                    <div className="experienceHeading">
+                      {this.displayExperience()}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div>
+            <Modal show={this.state.messageModalShow} onHide={this.handleApplicationClose} >
+              <Modal.Header closeButton>
+                <Modal.Title>
+                  Include your message
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <form>
+                  <FormGroup row>
+                    <Col sm={8}>
+                      <textarea
+                        rows="4"
+                        cols="55"
+                        name="message" 
+                        placeholder="Type your message here..."
+                        onChange={this.onChangeHandler}
+                        required />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup check row>
+                    <Col sm={{ size: 4, offset:3 }}>
+                      {/* I am using Button of react-bootstrap and not reactstrap and hence cannot give onSubmit for form and giving onClick of button */}
+                      <Button style={{width:150,height:50}} onClick={this.submitMessage}>Apply</Button>
+                    </Col>
+                  </FormGroup>
+                </form>
+              </Modal.Body>
+            </Modal>
           </div>
         </div>
       );

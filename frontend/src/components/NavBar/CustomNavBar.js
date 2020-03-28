@@ -34,6 +34,7 @@ class CustomNavBar extends React.Component{
           <Nav className="ml-auto mr-5">
             <Nav.Link href="/newJobPost">Post Opening</Nav.Link>
             <Nav.Link href="/searchStudents">Search Students</Nav.Link>
+            <Nav.Link href="/companyMessages">Messages</Nav.Link>
             <NavDropdown title="Events" id="nav-dropdown">
               <NavDropdown.Item href="/listEvents">List Events</NavDropdown.Item>
               <NavDropdown.Divider />
@@ -61,12 +62,13 @@ class CustomNavBar extends React.Component{
           </Navbar.Brand>
           <Nav className="ml-auto mr-5">
             <Nav.Link href="/appliedJobs">Applications</Nav.Link>
+            <Nav.Link href="/studentSearchStudents">Search Students</Nav.Link>
+            <Nav.Link href="/studentMessages">Messages</Nav.Link>
             <NavDropdown title="Events" id="basic-nav-dropdown">
               <NavDropdown.Item href="/listEventsStudent">Upcoming Events</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="/registeredEvents">Your Events</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="/studentSearchStudents">Search Students</Nav.Link>
             <NavDropdown title={
                         <Image src={serverIp+':'+serverPort+'/'+profile_src}
                         alt='Profile Picture'
