@@ -1,7 +1,8 @@
 import React from 'react';
 import './MessageComponent.css';
 import { connect } from 'react-redux';
-import { Alert } from 'react-bootstrap';
+import {Button, Alert} from 'react-bootstrap';
+import {Col, FormGroup} from 'reactstrap';
 import {userAllConversations, addMessageInConversation, getAllMessagesOfAConversation} from '../../../actions/messageActions';
 import { serverIp, serverPort } from '../../../config';
 import CustomNavBar from '../../NavBar/CustomNavBar';
@@ -17,9 +18,12 @@ class MessageComponent extends React.Component{
       otherParticipantEmailId:'',
       otherParticipantRole:'',
       showingChats:'',
+      inputMessage:'',
     }
     this.conversationButtons = this.conversationButtons.bind(this);
     this.showChats = this.showChats.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
   componentDidMount(){
@@ -46,6 +50,7 @@ class MessageComponent extends React.Component{
           noRecordChat: chatList.noRecord
         });
       } else if(chatList.allChats){
+          console.log(chatList.allChats);
           let allBeautifulChats = []
           chatList.allChats.forEach((eachChat)=>{
             var jsDate = new Date(eachChat.createdAt);
@@ -60,23 +65,6 @@ class MessageComponent extends React.Component{
 
             let leftOrRightMessage = eachChat.fromEmailId===localStorage.getItem('email_id') && eachChat.fromRole===localStorage.getItem('userRole')
                                       ? <div class="style__conversations-index-students-message___-uBy2">
-                                          <div class="style__flex___fCvpa style__justify-flex-start___33H8N">
-                                            <div class="style__flex-item___2eWZ4" style={{flex:'0 1 auto', order: '0'}}>
-                                              <div class="style__flex___fCvpa">
-                                                <div class="style__flex-item___2eWZ4" style={{flex:'0 1 auto', order: '0'}}>
-                                                  <div class="style__message-container___1MZ5J">
-                                                    <div>
-                                                      <div class="style__received-message___1EMnF style__message___16Jw4">
-                                                        {eachChat.message}
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div> 
-                                      : <div class="style__conversations-index-students-message___-uBy2">
                                           <div class="style__flex___fCvpa style__justify-flex-end___229cl">
                                             <div class="style__flex-item___2eWZ4" style={{flex:'0 1 auto', order: '0'}}>
                                               <div class="style__flex___fCvpa style__align-flex-end___3huTz style__row-reverse___2-eK8">
@@ -95,6 +83,23 @@ class MessageComponent extends React.Component{
                                             </div>
                                           </div>
                                         </div>
+                                      : <div class="style__conversations-index-students-message___-uBy2">
+                                          <div class="style__flex___fCvpa style__justify-flex-start___33H8N">
+                                            <div class="style__flex-item___2eWZ4" style={{flex:'0 1 auto', order: '0'}}>
+                                              <div class="style__flex___fCvpa">
+                                                <div class="style__flex-item___2eWZ4" style={{flex:'0 1 auto', order: '0'}}>
+                                                  <div class="style__message-container___1MZ5J">
+                                                    <div>
+                                                      <div class="style__received-message___1EMnF style__message___16Jw4">
+                                                        {eachChat.message}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div> 
             let each = <div>
               <div class="style__timestamp___1B3rg">
                 <div class="style__text___2ilXR style__muted___2z7cM style__center___ihjch">
@@ -105,14 +110,36 @@ class MessageComponent extends React.Component{
             </div>
             allBeautifulChats.push(each);
           });
+          // pushing the input text field
+          allBeautifulChats.push(
+              <div class="style__conversation-message-inputs___R0EyU style__bottomBar___ZDvWf">
+              <form>
+                <FormGroup row>
+                  <Col sm={10}>
+                    <textarea type="textarea" name="inputMessage" placeholder="Type a message..." class="style__message-input___7_b17" aria-label="Message" onChange={this.onChangeHandler}></textarea>
+                  </Col>
+                  <Col sm={{ size: 2}}>
+                    {/* I am using Button of react-bootstrap and not reactstrap and hence cannot give onSubmit for form and giving onClick of button */}
+                    <Button style={{width:120,height:50}} onClick={this.sendMessage}>Send</Button>
+                  </Col>
+                </FormGroup>
+              </form>
+            </div>
+          );
           this.setState({
             allChats: allBeautifulChats
           },()=>{
             console.log('componentWillReceiveProps Updated Chat List')
-            console.log(this.state.allChats);
+            //console.log(this.state.allChats);
           });
       }
     }
+  }
+
+  onChangeHandler(e){
+    this.setState({
+      [e.target.name]:e.target.value
+    });
   }
 
   showChats(otherParticipantEmailId, otherParticipantRole){
@@ -123,8 +150,19 @@ class MessageComponent extends React.Component{
     this.setState({
       otherParticipantEmailId:otherParticipantEmailId,
       otherParticipantRole:otherParticipantRole
-    });
-                                              
+    });                                    
+  }
+
+  sendMessage(e){
+    e.preventDefault();
+    console.log('Inside send Message');
+    console.log(this.state.inputMessage)
+    this.props.addMessageInConversation({fromEmailId:localStorage.getItem('email_id'),
+                                          fromRole:localStorage.getItem('userRole'),
+                                          toEmailId:this.state.otherParticipantEmailId,
+                                          toRole:this.state.otherParticipantRole,
+                                          message:this.state.inputMessage});
+    this.showChats(this.state.otherParticipantEmailId,this.state.otherParticipantRole);
   }
 
   conversationButtons(){
@@ -158,12 +196,19 @@ class MessageComponent extends React.Component{
       window.sessionStorage.clear();
       window.location.href = '/';
     }
+    let noRecordFoundMessage = "";
+    if(this.state.noRecord){
+      noRecordFoundMessage = <Alert variant="info">
+                There are no conversations yet. Please messages students first.
+                </Alert>
+    }
     return (
       <div>
         <div>
           <CustomNavBar />
         </div>
         <br />
+        {noRecordFoundMessage}
         <div class="main-container">
           <div>
             <div>

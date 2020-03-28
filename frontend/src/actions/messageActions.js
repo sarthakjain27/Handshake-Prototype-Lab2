@@ -32,7 +32,7 @@ export const addMessageInConversation = (data) => dispatch => {
       window.alert('Error in sending the message');
     } else if(response.data === 'Success'){
       window.alert('Successfully messaged');
-      window.location.reload();
+      //getAllMessagesOfAConversation(data);
     }
   }).catch(err => {
     console.log('Error in addMessageInConversation in messageActions.js: '+err);

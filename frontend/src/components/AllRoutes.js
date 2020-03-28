@@ -30,6 +30,7 @@ import AddEducationStudent from './Student/Profile/AddEducation';
 import EditStudentProfessionalExperience from './Student/Profile/EditExperience';
 import EditStudentEducation from './Student/Profile/EditEducation';
 import StudentSearchStudents from './Student/SearchStudents/SearchStudents';
+import StudentMessage from './Student/MessageComponent/MessageComponent';
 
 class AllRoutes extends React.Component {
   render() {
@@ -62,6 +63,7 @@ class AllRoutes extends React.Component {
         <Route exact path="/viewCompanyProfile/:id" component={CompanyProfile} />
         <Route exact path="/StudentProfile/:id" component={StudentProfile} />
         <Route exact path="/studentSearchStudents" component={StudentSearchStudents} />
+        <Route exact path="/studentMessages" component={StudentMessage} />
       </div>
     );
   }
