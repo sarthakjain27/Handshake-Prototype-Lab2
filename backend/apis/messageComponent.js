@@ -1,4 +1,4 @@
-const message = require('../models/message.model');
+const messageSchema = require('../models/message.model');
 
 const addMessageInAConversation = (req, res) => {
   console.log('Inside addMessageInAConversation');
@@ -16,13 +16,13 @@ const addMessageInAConversation = (req, res) => {
       conversationId = toEmailId+'_'+fromEmailId;
     }
   }
-  message.findOne({conversationId:conversationId},(error,result)=>{
+  messageSchema.findOne({conversationId:conversationId},(error,result)=>{
     if(error){
       console.log('Error in finding the conversation with id: '+conversationId);
       res.send('Error');
     } else if(result === null){
       console.log('No conversation exists with the conversation with id: '+conversationId);
-      let conversationToCreate = message({
+      let conversationToCreate = messageSchema({
         conversationId:conversationId,
         participant1emailId:fromEmailId,
         participant1Role:fromRole,
@@ -57,7 +57,7 @@ const addMessageInAConversation = (req, res) => {
 const getAllMessageOFAConversation = (req, res) => {
   console.log('Inside getAllMessageOFAConversation');
   console.log(req.body);
-  const {fromEmailId, fromRole, toEmailId, toRole, message} = req.body;
+  const {fromEmailId, fromRole, toEmailId, toRole} = req.body;
   let conversationId = '';
   if(fromRole === 'company'){
     conversationId = fromEmailId+'_'+toEmailId;
@@ -70,7 +70,7 @@ const getAllMessageOFAConversation = (req, res) => {
       conversationId = toEmailId+'_'+fromEmailId;
     }
   }
-  message.findOne({conversationId:conversationId},(error,result)=>{
+  messageSchema.findOne({conversationId:conversationId},(error,result)=>{
     if(error){
       console.log('Error in searching the message collection to find the conversation');
       res.send('Error');
@@ -80,7 +80,7 @@ const getAllMessageOFAConversation = (req, res) => {
     } else {
       console.log('Conversation exist with given id: '+conversationId);
       console.log(result);
-      res.send(result);
+      res.send(result.chat);
     }
   });
 }
@@ -89,7 +89,7 @@ const getAllConversations = (req, res) => {
   console.log('Inside getAllConversations');
   console.log(req.body);
   const {userEmailId, userRole} = req.body;
-  message.find({
+  messageSchema.find({
     $or:[{participant1emailId:userEmailId,participant1Role:userRole},{participant2emailId:userEmailId,participant2Role:userRole}]
   },(error,result)=>{
     if(error){

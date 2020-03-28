@@ -5,6 +5,7 @@ import jobReducer from './jobReducer';
 import profileReducer from './profileReducer';
 import eventReducer from './eventReducer';
 import searchReducer from './searchReducer';
+import messageReducer from './messageReducer';
 
 export default combineReducers({
   login:loginReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   job:jobReducer,
   profile:profileReducer,
   event:eventReducer,
-  search:searchReducer
+  search:searchReducer,
+  message:messageReducer
 });

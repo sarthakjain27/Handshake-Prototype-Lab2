@@ -6,6 +6,7 @@ import {
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { getStudentProfile, updateSkills } from '../../../actions/profileActions';
+import {addMessageInConversation} from '../../../actions/messageActions'
 import Select from 'react-select';
 import { serverIp, serverPort } from '../../../config';
 import CustomNavBar from '../../NavBar/CustomNavBar';
@@ -97,6 +98,11 @@ class StudentProfile extends React.Component {
 
   submitMessage(e){
     e.preventDefault();
+    this.props.addMessageInConversation({fromEmailId:localStorage.getItem('email_id'),
+                                          fromRole:localStorage.getItem('userRole'),
+                                          toEmailId:this.props.match.params.id,
+                                          toRole:'student',
+                                          message:this.state.message});
   }
 
   onToggle() {
@@ -440,4 +446,4 @@ const mapStateToProps = state => ({
   profile: state.profile.user
 });
 
-export default connect(mapStateToProps, { getStudentProfile, updateSkills })(StudentProfile);
+export default connect(mapStateToProps, { getStudentProfile, updateSkills, addMessageInConversation })(StudentProfile);
