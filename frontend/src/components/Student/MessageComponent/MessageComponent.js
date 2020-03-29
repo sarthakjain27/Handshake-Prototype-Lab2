@@ -177,7 +177,7 @@ class MessageComponent extends React.Component{
                                           toEmailId:this.state.otherParticipantEmailId,
                                           toRole:this.state.otherParticipantRole,
                                           message:this.state.inputMessage});
-    this.showChats(this.state.otherParticipantEmailId,this.state.otherParticipantRole);
+    //this.showChats(this.state.otherParticipantEmailId,this.state.otherParticipantRole);
   }
 
   conversationButtons(){
