@@ -1,7 +1,7 @@
 import React from 'react';
 import './MessageComponent.css';
 import { connect } from 'react-redux';
-import {Button, Alert} from 'react-bootstrap';
+import {Button, Alert, Image} from 'react-bootstrap';
 import {Col, FormGroup} from 'reactstrap';
 import {userAllConversations, addMessageInConversation, getAllMessagesOfAConversation} from '../../../actions/messageActions';
 import { serverIp, serverPort } from '../../../config';
@@ -17,6 +17,8 @@ class MessageComponent extends React.Component{
       noRecordChat:false,
       otherParticipantEmailId:'',
       otherParticipantRole:'',
+      otherParticipantName:'',
+      otherParticipantProfileLink:'',
       showingChats:'',
       inputMessage:'',
     }
@@ -24,6 +26,7 @@ class MessageComponent extends React.Component{
     this.showChats = this.showChats.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.capitalize = this.capitalize.bind(this);
   }
 
   componentDidMount(){
@@ -142,15 +145,27 @@ class MessageComponent extends React.Component{
     });
   }
 
-  showChats(otherParticipantEmailId, otherParticipantRole){
+  showChats(otherParticipantEmailId, otherParticipantRole, otherParticipantName, otherParticipantProfileLink){
     this.props.getAllMessagesOfAConversation({fromEmailId:localStorage.getItem('email_id'),
                                               fromRole:localStorage.getItem('userRole'),
                                               toEmailId:otherParticipantEmailId,
                                               toRole:otherParticipantRole});  
     this.setState({
       otherParticipantEmailId:otherParticipantEmailId,
-      otherParticipantRole:otherParticipantRole
+      otherParticipantRole:otherParticipantRole,
+      otherParticipantName:otherParticipantName,
+      otherParticipantProfileLink:otherParticipantProfileLink
     });                                    
+  }
+
+  capitalize(word, splitParam = ' ') {
+    console.log(word);
+    if (word) {
+      word = word.split(splitParam).map((eachWord) => eachWord.split(' ').map((each) => each.charAt(0).toUpperCase() + each.substring(1)).join(' '));
+      word = word.join(splitParam);
+      return word;
+    }
+    return '';
   }
 
   sendMessage(e){
@@ -169,21 +184,59 @@ class MessageComponent extends React.Component{
     if(this.state.allConversations.length > 0){
       let conversationButtons = [];
       this.state.allConversations.forEach((eachConversation)=>{
-        let otherParticipantEmailId = eachConversation.participant1emailId === localStorage.getItem('email_id')?eachConversation.participant2emailId:eachConversation.participant1emailId;
-        let otherParticipantRole = eachConversation.participant1Role === localStorage.getItem('userRole')?eachConversation.participant2Role:eachConversation.participant1Role;
+        let otherParticipantEmailId = eachConversation.participant1emailId;
+        let otherParticipantRole = eachConversation.participant1Role;
+        let otherParticipantName = eachConversation.participant1Name;
+        let otherParticipantProfileLink = serverIp+':'+serverPort+'/'+eachConversation.participant1ProfilePictureUrl;
+        if(eachConversation.participant1emailId === localStorage.getItem('email_id') && eachConversation.participant1Role === localStorage.getItem('userRole')){
+          otherParticipantEmailId = eachConversation.participant2emailId;
+          otherParticipantRole = eachConversation.participant2Role;
+          otherParticipantName = eachConversation.participant2Name;
+          otherParticipantProfileLink = serverIp+':'+serverPort+'/'+eachConversation.participant2ProfilePictureUrl;
+        } 
+        console.log('Other Participant profile picture link: '+otherParticipantProfileLink);
         let each = 
-          <button type="button" class="style__conversations-index-students-conversation-list-item___JflUk style__selected-conversation___1ceuZ" tabIndex="0" aria-pressed="true" onClick={()=>this.showChats(otherParticipantEmailId,otherParticipantRole)}>
-            <div class="style__flex___fCvpa">
-              <div class="style__text___2ilXR">
-                <b>Receiver User Email Id:</b> {otherParticipantEmailId}
-              </div>
-            </div>
-            <div class="style__flex___fCvpa">
-              <div class="style__text___2ilXR">
-                  <b>Receiver User Role:</b> {otherParticipantRole}
+        <div>
+          <button type="button" class="style__conversations-index-students-conversation-list-item___JflUk" tabIndex="0" aria-pressed="true" onClick={()=>this.showChats(otherParticipantEmailId,otherParticipantRole, otherParticipantName, otherParticipantProfileLink)}>
+            <div class="style__flex-item___2eWZ4" style={{flex:'0 1 auto',order:0}}>
+              <div class="style__flex___fCvpa">
+                <div class="style__flex-item___2eWZ4" style={{flex:'0 1 auto',order:0}}>
+                  <div class="style__avatar___JZYm_">
+                    <div class="style__avatar-small___2kw-_ style__avatar-round___3RzuF">
+                      <div class="style__avatar-image___2LV5H" style={{backgroundImage:"url("+otherParticipantProfileLink+ ")"}}> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="style__flex-item___2eWZ4" style={{flex:'0 1 auto',order:0}}>
+                  <div class="style__flex___fCvpa">
+                    <div class="style__flex-item___2eWZ4">
+                      <div class="style__text___2ilXR style__large___3qwwG">
+                        <b>{this.capitalize(otherParticipantName)}</b> 
+                      </div>
+                    </div>
+                  </div>
+                  <div class="style__flex___fCvpa">
+                    <div class="style__flex-item___2eWZ4">
+                      <div class="style__text___2ilXR">
+                        <i> {otherParticipantEmailId} </i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="style__flex___fCvpa">
+                    <div class="style__flex-item___2eWZ4">
+                      <div class="style__text___2ilXR style__muted___2z7cM">
+                          <b>User-Role:</b> {this.capitalize(otherParticipantRole)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </button>
+          <br />
+          <br />
+        </div>
         conversationButtons.push(each);
       });
       return conversationButtons;
@@ -202,13 +255,20 @@ class MessageComponent extends React.Component{
                 There are no conversations yet. Please messages students first.
                 </Alert>
     }
+    let onClickShowChatUserProfilePicture = null;
+    if(this.state.otherParticipantProfileLink!==''){
+      onClickShowChatUserProfilePicture = <Image src={this.state.otherParticipantProfileLink}
+                                            alt='Profile Picture'
+                                            roundedCircle 
+                                            style={{height:40, width:40}}/>
+    }
     return (
       <div>
         <div>
           <CustomNavBar />
         </div>
         <br />
-        {noRecordFoundMessage}
+        
         <div class="main-container">
           <div>
             <div>
@@ -230,6 +290,7 @@ class MessageComponent extends React.Component{
                               <div class="style__message-list___1MTr4 style__viewBody___BTNPl">
                                 <div>
                                   <div class="style__message-list___1MTr4 style__viewBody___BTNPl" tabIndex="0" aria-label="Conversation List">
+                                    {noRecordFoundMessage}
                                     {this.conversationButtons()}
                                   </div>
                                 </div>
@@ -242,7 +303,11 @@ class MessageComponent extends React.Component{
                             <div class="style__flex___fCvpa style__column___1Ye52 style__full-height___3AWW4">
                               <div class="style__topBar___1iT35 style__top-bar___8qIho">
                                 <div>
-                                  <h2 class="style__heading___29i1Z style__large___15W-p">{this.state.otherParticipantEmailId}</h2>
+                                  {onClickShowChatUserProfilePicture}
+                                </div>
+                                
+                                <div>
+                                  <h2 class="style__heading___29i1Z style__large___15W-p">{this.capitalize(this.state.otherParticipantName)}</h2>
                                 </div>
                               </div>
                               <div class="style__selected-conversation-messages___2c0ac style__viewBody___BTNPl">

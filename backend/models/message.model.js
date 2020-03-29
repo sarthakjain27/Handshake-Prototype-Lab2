@@ -14,8 +14,12 @@ const message = new Schema({
   conversationId:String,
   participant1emailId:String,
   participant1Role:String,
+  participant1ProfilePictureUrl:String,
+  participant1Name:String,
   participant2emailId:String,
   participant2Role:String,
+  participant2ProfilePictureUrl:String,
+  participant2Name:String,
   chat:[eachMessage]
 });
 

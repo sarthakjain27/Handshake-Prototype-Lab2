@@ -165,7 +165,7 @@ class SignUp extends React.Component{
                                     className="form-control" 
                                     name="name" 
                                     placeholder={this.state.user==='student'?'Student Name':'Company Name'}
-                                    pattern="^[a-zA-Z0-9]+([ .]{1}[a-zA-Z0-9]+)*$"
+                                    pattern="^[a-zA-Z0-9]+([ .,]{*}[a-zA-Z0-9]+)*$"
                                     title="It can only contain letters, digits, single space character and period. It must start with alphanumeric characters only."
                                     onChange={this.onChangeHandler}
                                     required 

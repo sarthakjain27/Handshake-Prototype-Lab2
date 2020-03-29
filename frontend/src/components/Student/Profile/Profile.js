@@ -97,6 +97,10 @@ class Profile extends React.Component {
       fd.append('contact_email', this.state.contactEmail);
       fd.append('dateOfBirth', `${this.state.dateOfBirth.getFullYear()}/${this.state.dateOfBirth.getMonth() + 1}/${this.state.dateOfBirth.getDate()}`);
       fd.append('file', this.state.selectedFile);
+      
+      // for (var pair of fd.entries()) {
+      //   console.log(pair[0]+ ': ' + pair[1]); 
+      // }
       this.props.updateStudentProfile(fd);
     }
   }

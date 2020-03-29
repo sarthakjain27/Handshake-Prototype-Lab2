@@ -26,8 +26,12 @@ const addMessageInAConversation = (req, res) => {
         conversationId:conversationId,
         participant1emailId:fromEmailId,
         participant1Role:fromRole,
+        participant1ProfilePictureUrl:req.body.fromProfilePictureUrl,
+        participant1Name:req.body.fromName,
         participant2emailId:toEmailId,
         participant2Role:toRole,
+        participant2ProfilePictureUrl:req.body.toProfilePictureUrl,
+        participant2Name:req.body.toName,
         chat:[{fromEmailId:fromEmailId,fromRole:fromRole,toEmailId:toEmailId,toRole:toRole,message:message}]
       });
       conversationToCreate.save(function(error){

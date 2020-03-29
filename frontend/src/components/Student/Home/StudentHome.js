@@ -33,6 +33,8 @@ class StudentHome extends React.Component {
     this.handleApplyFilter = this.handleApplyFilter.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
+    this.handleReset = this.handleReset.bind(this);
+    this.handleSearchReset = this.handleSearchReset.bind(this);
   }
 
   /*
@@ -111,7 +113,7 @@ class StudentHome extends React.Component {
 
   handleApplyFilter(e){
     e.preventDefault();
-    window.alert(`${this.state.selectedCategoryFilter} | ${this.state.filteredCity}`);
+    //window.alert(`${this.state.selectedCategoryFilter} | ${this.state.filteredCity}`);
     let category = '';
     if(this.state.selectedCategoryFilter === 'Full Time')
       category = 'full time';
@@ -159,6 +161,29 @@ class StudentHome extends React.Component {
     this.setState({
         currentActivePage: currentPage
     });
+  }
+
+  handleReset(e){
+    e.preventDefault();
+    const { allJobs } = this.state;
+    this.setState({
+      filteredJobs: allJobs,
+      selectedCategoryFilter: '',
+      filteredCity: '',
+      currentActivePage:1
+    });
+  }
+
+  handleSearchReset(e) {
+    e.preventDefault();
+    this.props.searchJob({});
+    this.setState({
+      searchValue: '',
+      selectedOption: '',
+      selectedCategoryFilter:'',
+      filteredCity:'',
+      currentActivePage:1
+    })
   }
 
   render() {
@@ -234,7 +259,9 @@ class StudentHome extends React.Component {
                             />
                           </Col>
                           <Col sm={3}>
-                            <Button color="primary" style={{width:150,height:50}}>Search</Button>
+                            <Button color="primary" style={{width:100,height:40}}>Search</Button>
+                            {' '}
+                          <Button color="info" style={{ width: 100, height: 40 }} onClick={this.handleSearchReset}>Reset</Button>
                           </Col>
                         </FormGroup>
                       </form>

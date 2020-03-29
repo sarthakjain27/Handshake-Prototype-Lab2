@@ -71,7 +71,9 @@ class StudentProfile extends React.Component {
         experience:profile.experiences,
         skills:profile.skills
       },()=>{
+        if (!this.props.match.params.id) {
         localStorage.setItem('profile_picture_url',this.state.basicDetails.profile_picture_url);
+        }
         //window.location.reload();
       });
     }
@@ -102,7 +104,14 @@ class StudentProfile extends React.Component {
                                           fromRole:localStorage.getItem('userRole'),
                                           toEmailId:this.props.match.params.id,
                                           toRole:'student',
-                                          message:this.state.message});
+                                          message:this.state.message,
+                                          fromProfilePictureUrl:localStorage.getItem('profile_picture_url'),
+                                          fromName:localStorage.getItem('name'),
+                                          toProfilePictureUrl:this.state.basicDetails.profile_picture_url,
+                                          toName:this.state.basicDetails.student_name});
+    this.setState({
+      messageModalShow:false
+    });
   }
 
   onToggle() {
@@ -319,6 +328,19 @@ class StudentProfile extends React.Component {
       if (this.state.basicDetails.profile_picture_url && this.state.basicDetails.profile_picture_url !== '') {
         profileSrc = this.state.basicDetails.profile_picture_url;
       }
+      let showMessageButton = null;
+      if(this.props.match.params.id!==localStorage.getItem('email_id'))
+        showMessageButton = <Button variant="primary" onClick={this.messageModalShowChangeHandler}>
+                              Message
+                            </Button>
+      else{
+        if(localStorage.getItem('userRole')!=='student'){
+          showMessageButton = <Button variant="primary" onClick={this.messageModalShowChangeHandler}>
+                              Message
+                            </Button>
+        }
+      }
+      
       profile = (
         <div>
           <div className="main-div-studentProfile">
@@ -330,9 +352,7 @@ class StudentProfile extends React.Component {
                     <Card.Body>
                       <Card.Title>{this.capitalize(this.state.basicDetails.student_name)}
                       {' '}
-                      <Button variant="primary" onClick={this.messageModalShowChangeHandler}>
-                        Message
-                      </Button>
+                      {showMessageButton}
                       </Card.Title>
                       <Card.Subtitle className="mb-2 text-muted">
                         Date of Birth:

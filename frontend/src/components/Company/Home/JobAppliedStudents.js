@@ -143,9 +143,6 @@ class JobAppliedStudents extends React.Component{
                     {eachStudent.careerObjective}
                   </Card.Text>
                 </Card.Body>
-                <Card.Footer>
-                  <b><i>Status: </i></b> {this.capitalize(eachStudent.status)}
-                </Card.Footer>
               </Card>
               <br />
             </div>);
@@ -200,6 +197,7 @@ class JobAppliedStudents extends React.Component{
       this.props.listCreatedJobs({emailId:localStorage.getItem('email_id')});
       if(this.props.studentStatusUpdateMessage === 'Updated'){
         window.alert('Updated student application status successfully');
+        //window.location.reload();
       } else{
         window.alert('Error in updating student application status');
       }

@@ -101,6 +101,7 @@
 .style__flex___fCvpa {
   display: flex;
   width: 100%;
+
 }
 
 .style__heading___3SdGZ {
@@ -126,9 +127,11 @@
     -webkit-overflow-scrolling: touch;
 }
 
-.style__conversations-index-students-conversation-list-item___JflUk.style__selected-conversation___1ceuZ {
-  background: #f0f0f0;
+.style__flex-item___2eWZ4 {
+  min-width: 0;
 }
+
+
 
 .style__conversations-index-students-conversation-list-item___JflUk {
   position: relative;
@@ -138,7 +141,14 @@
   padding: 16px;
   text-align: left;
   width: 100%;
+  border: 1px solid rgb(15, 165, 235);
 }
+
+.style__conversations-index-students-conversation-list-item___JflUk:hover {
+  background: #f0f0f0;
+}
+
+
 
 .style__text___2ilXR {
   color: rgba(0,0,0,.8);
@@ -176,9 +186,18 @@
   font-size: 18px;
 }
 
+.style__large___3qwwG {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.style__muted___2z7cM {
+  color: rgba(0,0,0,.56);
+}
+
 .style__heading___29i1Z {
   margin: 0 0 .7em;
-  font-family: Suisse Int\'l,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
+  font-family: Suisse Intl,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
   color: rgba(0,0,0,.98);
   line-height: 1.33em;
   font-weight: 500;
@@ -205,6 +224,15 @@
   line-height: 22px;
 }
 
+.style__large___3qwwG {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.style__muted___2z7cM {
+  color: rgba(0,0,0,.56);
+}
+
 .style__center___ihjch {
   text-align: center;
 }
@@ -222,6 +250,32 @@
 
 .style__flex-item___2eWZ4 {
   min-width: 0;
+}
+
+.style__avatar___JZYm_ {
+  margin-right: 8px;
+}
+
+.style__avatar-small___2kw-_ {
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  line-height: 40px;
+  font-size: 40px;
+}
+
+.style__avatar-round___3RzuF {
+  border-radius: 50%;
+}
+
+.style__avatar-image___2LV5H {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-color: #fff;
 }
 
 .style__message-container___1MZ5J {

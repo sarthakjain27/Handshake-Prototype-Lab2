@@ -72,7 +72,7 @@ class ListEvents extends React.Component {
     let noRecordFoundMessage = "";
     if(this.state.noRecord){
       noRecordFoundMessage = <Alert variant="info">
-                You have not made any Job Postings.
+                You have not created any Events.
                 </Alert>
     } 
     let pagesBar = null;

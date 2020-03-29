@@ -75,6 +75,7 @@ class Login extends React.Component{
       message = "Wrong User role given";
     } else if(this.props.user && this.props.user.profilePictureUrl && this.state.loginFlag){
       localStorage.setItem('user_id',this.props.user._id);
+      localStorage.setItem('name',this.props.user.name);
       localStorage.setItem('email_id',this.state.emailId.toLowerCase());
       localStorage.setItem('userRole',this.state.user);
       localStorage.setItem('profile_picture_url',this.props.user.profilePictureUrl);

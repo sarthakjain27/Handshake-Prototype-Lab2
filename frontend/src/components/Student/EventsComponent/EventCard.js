@@ -120,7 +120,7 @@ class EventCard extends React.Component {
               {this.capitalize(this.props.event.eventName)}
               {' '}
               |
-              {this.capitalize(this.props.event.name)}
+              <a href={'/viewCompanyProfile/'+this.props.event._idCompany}>{this.capitalize(this.props.event.name)}</a>
               {' '}
               {' '}
               {button}
