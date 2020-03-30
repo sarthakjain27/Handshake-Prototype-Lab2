@@ -18,6 +18,7 @@ const EventComponent = require('./apis/eventComponent');
 const ProfileComponent = require('./apis/profileComponent');
 const SearchComponent = require('./apis/searchComponent');
 const MessageComponent = require('./apis/messageComponent');
+const { checkAuth } = require("./passport");
 
 const app = express();
 // setting view engine
@@ -31,7 +32,9 @@ app.use(cookieParser());
 app.use(session({
   secret: 'sarthak_handshake_secure_string',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  duration: 60 * 60 * 1000,    // Overall duration of Session : 30 minutes : 1800 seconds
+  activeDuration: 5 * 60 * 1000
 }));
 app.use(cors({ origin: `${Config.applicationAddress}:${Config.applicationPort}`, credentials: true }));
 app.use(express.static('./ProfilePictures/Company'));
@@ -50,19 +53,19 @@ app.post('/login', (req, res) => {
   Login.login(req, res, bcrypt);
 });
 
-app.post('/createJobPost', (req, res) => {
+app.post('/createJobPost', checkAuth, (req, res) => {
   JobComponent.createJobPost(req, res);
 });
 
-app.post('/listCompanyPostedJobs', (req, res) => {
+app.post('/listCompanyPostedJobs', checkAuth, (req, res) => {
   JobComponent.listCompanyPostedJobs(req, res);
 });
 
-app.post('/getStudentInfo', (req, res) => {
+app.post('/getStudentInfo',  checkAuth, (req, res) => {
   ProfileComponent.getStudentInfo(req, res);
 });
 
-app.post('/getCompanyInfo', (req, res) => {
+app.post('/getCompanyInfo', checkAuth, (req, res) => {
   ProfileComponent.getCompanyInfo(req,res);
 });
 
@@ -79,11 +82,11 @@ const companyProfilePictureStorage = multer.diskStorage({
 
 const companyProfilePictureUpload = multer({ storage: companyProfilePictureStorage });
 
-app.post('/updateCompanyProfile', companyProfilePictureUpload.single('file'), (req, res) => {
+app.post('/updateCompanyProfile', checkAuth, companyProfilePictureUpload.single('file'), (req, res) => {
   ProfileComponent.companyUpdateProfile(req, res);
 });
 
-app.post('/getPostedJobs', (req, res) => {
+app.post('/getPostedJobs', checkAuth, (req, res) => {
   JobComponent.getPostedJobs(req, res);
 });
 
@@ -98,35 +101,35 @@ const studentResumeFileStorage = multer.diskStorage({
 
 const studentResumeFileUpload = multer({ storage: studentResumeFileStorage });
 
-app.post('/applyForJob', studentResumeFileUpload.single('file'), (req, res) => {
+app.post('/applyForJob', checkAuth, studentResumeFileUpload.single('file'), (req, res) => {
   JobComponent.applyForJob(req, res);
 });
 
-app.post('/getAppliedJobs', (req, res) => {
+app.post('/getAppliedJobs', checkAuth, (req, res) => {
   JobComponent.getAppliedJobs(req, res);
 });
 
-app.post('/updateAppliedStudentJobStatus', (req, res) => {
+app.post('/updateAppliedStudentJobStatus', checkAuth, (req, res) => {
   JobComponent.updateAppliedStudentJobStatus(req, res);
 });
 
-app.post('/listCompanyCreatedEvents', (req, res) => {
+app.post('/listCompanyCreatedEvents', checkAuth, (req, res) => {
   EventComponent.listCompanyPostedEvents(req, res);
 });
 
-app.post('/createEvent', (req, res) => {
+app.post('/createEvent', checkAuth, (req, res) => {
   EventComponent.createEvent(req, res);
 });
 
-app.post('/registerForEvent', (req, res) => {
+app.post('/registerForEvent', checkAuth, (req, res) => {
   EventComponent.registerForEvent(req, res);
 });
 
-app.post('/getSearchedEvent', (req, res) => {
+app.post('/getSearchedEvent', checkAuth, (req, res) => {
   EventComponent.getSearchedEvent(req, res);
 });
 
-app.post('/getStudentAllEducation', (req, res) => {
+app.post('/getStudentAllEducation', checkAuth, (req, res) => {
   ProfileComponent.getStudentEducation(req, res);
 });
 
@@ -143,59 +146,59 @@ const studentProfilePictureStorage = multer.diskStorage({
 
 const studentProfilePictureUpload = multer({ storage: studentProfilePictureStorage });
 
-app.post('/updateStudentProfile', studentProfilePictureUpload.single('file'), (req, res) => {
+app.post('/updateStudentProfile', checkAuth, studentProfilePictureUpload.single('file'), (req, res) => {
   ProfileComponent.studentUpdateProfile(req, res);
 });
 
-app.post('/createEducation', (req, res) => {
+app.post('/createEducation', checkAuth, (req, res) => {
   ProfileComponent.createEducation(req, res);
 });
 
-app.post('/updateEducation', (req, res) => {
+app.post('/updateEducation', checkAuth, (req, res) => {
   ProfileComponent.updateEducation(req, res);
 });
 
-app.post('/deleteEducation', (req, res) => {
+app.post('/deleteEducation', checkAuth, (req, res) => {
   ProfileComponent.deleteEducation(req, res);
 });
 
-app.post('/createProfessionalExperience', (req, res) => {
+app.post('/createProfessionalExperience', checkAuth, (req, res) => {
   ProfileComponent.createExperience(req, res);
 });
 
-app.post('/updateProfessionalExperience', (req, res) => {
+app.post('/updateProfessionalExperience', checkAuth, (req, res) => {
   ProfileComponent.updateExperience(req, res);
 });
 
-app.post('/deleteProfessionalExperience', (req, res) => {
+app.post('/deleteProfessionalExperience', checkAuth, (req, res) => {
   ProfileComponent.deleteExperience(req, res);
 });
 
-app.post('/getRegisteredEvents', (req, res) => {
+app.post('/getRegisteredEvents', checkAuth, (req, res) => {
   EventComponent.getRegisteredEvents(req, res);
 });
 
-app.post('/updateSkills', (req, res) => {
+app.post('/updateSkills', checkAuth, (req, res) => {
   ProfileComponent.updateSkillSet(req, res);
 });
 
-app.post('/getStudentsRegisteredInAEvent', (req, res) => {
+app.post('/getStudentsRegisteredInAEvent', checkAuth, (req, res) => {
   EventComponent.getStudentsRegisteredInAEvent(req, res);
 });
 
-app.post('/searchStudents', (req, res) => {
+app.post('/searchStudents', checkAuth, (req, res) => {
   SearchComponent.companySearchForStudents(req, res);
 });
 
-app.post('/addMessageInAConversation', (req, res) => {
+app.post('/addMessageInAConversation', checkAuth, (req, res) => {
   MessageComponent.addMessageInAConversation(req, res);
 });
 
-app.post('/getAllMessageOFAConversation', (req, res) => {
+app.post('/getAllMessageOFAConversation', checkAuth, (req, res) => {
   MessageComponent.getAllMessageOFAConversation(req, res);
 });
 
-app.post('/getAllConversationsOfAUser', (req, res)=>{
+app.post('/getAllConversationsOfAUser', checkAuth, (req, res)=>{
   MessageComponent.getAllConversations(req, res);
 })
 

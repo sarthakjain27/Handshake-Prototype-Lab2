@@ -5,13 +5,15 @@ import axios from "axios";
 export const userLogin = (loginData) => dispatch => {
   axios.defaults.withCredentials = true;
   axios.post(serverIp+':'+serverPort+'/login',loginData)
-  .then(response => dispatch({
+  .then(response => {
+    //console.log(response.data);
+    dispatch({
     type: USER_LOGIN,
     payload: response.data
-  }))
+  })})
   .catch(err => dispatch({
     type: USER_LOGIN,
-    payload: 'Error in making signup axios call'
+    payload: err.response.data
   }))
 }
 

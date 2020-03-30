@@ -5,6 +5,7 @@ import { Redirect } from 'react-router';
 import Dropdown from 'react-dropdown';
 import '../../../node_modules/react-dropdown/style.css';
 import { userLogin } from '../../actions/loginAction';
+const jwt_decode = require('jwt-decode');
 
 class Login extends React.Component{
 
@@ -73,12 +74,15 @@ class Login extends React.Component{
       message = "Error in comparing the password";
     } else if(this.props.user === "Wrong UserRole Given" && this.state.loginFlag){
       message = "Wrong User role given";
-    } else if(this.props.user && this.props.user.profilePictureUrl && this.state.loginFlag){
-      localStorage.setItem('user_id',this.props.user._id);
-      localStorage.setItem('name',this.props.user.name);
+    //} else if(this.props.user && this.props.user.profilePictureUrl && this.state.loginFlag){
+    } else if(this.props.user && this.props.user.token && this.state.loginFlag){
+      localStorage.setItem('token',this.props.user.token);
+      var decoded = jwt_decode(this.props.user.token.split(' ')[1]);
+      localStorage.setItem('user_id',decoded._id);
+      localStorage.setItem('name',decoded.name);
       localStorage.setItem('email_id',this.state.emailId.toLowerCase());
       localStorage.setItem('userRole',this.state.user);
-      localStorage.setItem('profile_picture_url',this.props.user.profilePictureUrl);
+      localStorage.setItem('profile_picture_url',decoded.profilePictureUrl);
       if(this.state.user === 'company') {
         redirectVar = <Redirect to="/listPostings"/>
       }

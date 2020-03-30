@@ -5,6 +5,7 @@ import axios from "axios";
 export const getStudentProfileAppliedInJob = (data) => dispatch => {
   let profiles = [];
   data.forEach((eachStudent)=>{
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios.post(serverIp+':'+serverPort+'/getStudentInfo',{emailId:eachStudent.studentId})
     .then(response => {
       console.log('getStudentsRegisteredInAJob Response data in componentDidMount');
@@ -21,8 +22,12 @@ export const getStudentProfileAppliedInJob = (data) => dispatch => {
       type: REGISTERED_STUDENTS,
       payload: {registeredStudents:profiles}
     })).catch(err => {
-      console.log(`Error in componentDidMount of JobAppliedStudents: ${err}`);
-      window.alert('Error in connecting to server');
+      if(err.response.status === 401){
+        window.alert('Unauthorized access');
+      } else {
+        console.log(`Error in componentDidMount of JobAppliedStudents: ${err}`);
+        window.alert('Error in connecting to server');
+      }
     });
   })
 }
@@ -30,6 +35,7 @@ export const getStudentProfileAppliedInJob = (data) => dispatch => {
 export const getStudentProfileAppliedInEvent = (data) => dispatch => {
   let profiles = [];
   data.forEach((eachStudent)=>{
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios.post(serverIp+':'+serverPort+'/getStudentInfo',{emailId:eachStudent})
     .then(response => {
       console.log('getStudentProfileAppliedInEvent Response data in componentDidMount');
@@ -45,36 +51,51 @@ export const getStudentProfileAppliedInEvent = (data) => dispatch => {
       type: REGISTERED_STUDENTS,
       payload: {registeredStudents:profiles}
     })).catch(err => {
+      if(err.response.status === 401){
+        window.alert('Unauthorized access');
+      } else {
       console.log(`Error in componentDidMount of JobAppliedStudents: ${err}`);
       window.alert('Error in connecting to server');
+      }
     });
   })
 }
 
 export const getStudentAllEducation = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/getStudentAllEducation`, data)
   .then((resp) => {
     console.log('getStudentAllEducation');
     console.log(resp.data);
     sessionStorage.setItem('educationSetFromListEvents', JSON.stringify(resp.data.educations));
   }).catch((err) => {
-    console.log(`Error in getStudentAllEducation post call in profileActions.js: ${err}`);
-    window.alert('Error in connecting to server');
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
+      console.log(`Error in getStudentAllEducation post call in profileActions.js: ${err}`);
+      window.alert('Error in connecting to server');
+    }
   });
 }
 
 export const getCompanyProfile = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/getCompanyInfo`, data)
   .then((resp) => dispatch({
     type:COMPANY_PROFILE,
     payload:resp.data
   })).catch((err) => {
-    console.log(`Error in getCompanyProfile post call in profileActions.js: ${err}`);
-    window.alert('Error in connecting to server');
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
+      console.log(`Error in getCompanyProfile post call in profileActions.js: ${err}`);
+      window.alert('Error in connecting to server');
+    }
   });
 }
 
 export const updateCompanyProfile = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   const config = { headers: { 'Content-Type': 'multipart/form-data' } };
   axios.post(`${serverIp}:${serverPort}/updateCompanyProfile`, data, config)
   .then((response) => {
@@ -91,23 +112,33 @@ export const updateCompanyProfile = (data) => dispatch => {
       window.location.href='/companyProfile';
     }
   }).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`Error in updateCompanyProfile post call in profileActions.js: ${err}`);
     window.alert('Error in connecting to server');
+    }
   });
 }
 
 export const getStudentProfile = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/getStudentInfo`, data)
   .then((resp) => dispatch({
     type:STUDENT_PROFILE,
     payload:resp.data
   })).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`Error in getStudentProfile post call in profileActions.js: ${err}`);
     window.alert('Error in connecting to server');
+    }
   });
 }
 
 export const updateStudentProfile = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   const config = { headers: { 'Content-Type': 'multipart/form-data' } };
   axios.post(`${serverIp}:${serverPort}/updateStudentProfile`, data, config)
   .then((response) => {
@@ -124,12 +155,17 @@ export const updateStudentProfile = (data) => dispatch => {
       window.location.href='/studentProfile';
     }
   }).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`Error in updateStudentProfile post call in profileActions.js: ${err}`);
     window.alert('Error in connecting to server');
+    }
   });
 }
 
 export const createEducation = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/createEducation`, data)
   .then((resp) => {
     console.log(resp.data);
@@ -144,12 +180,17 @@ export const createEducation = (data) => dispatch => {
       window.alert('Error in querying the database');
     }
   }).catch((err) => {
-    console.log(`Error in createEducation post call in profileActions.js: ${err}`);
-    window.alert('Error');
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
+      console.log(`Error in createEducation post call in profileActions.js: ${err}`);
+      window.alert('Error');
+    }
   });
 }
 
 export const createExperience = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/createProfessionalExperience`, data)
   .then((resp) => {
     console.log(resp.data);
@@ -164,12 +205,17 @@ export const createExperience = (data) => dispatch => {
       window.alert('Error in querying the database');
     }
   }).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`Error in createExperience post call in profileActions.js: ${err}`);
     window.alert('Error');
+    }
   });
 }
 
 export const updateEducation = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/updateEducation`, data)
   .then((resp) => {
     console.log(resp.data);
@@ -185,12 +231,17 @@ export const updateEducation = (data) => dispatch => {
       window.alert('Error in querying the database');
     }
   }).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`Error in updateEducation post call in profileActions.js: ${err}`);
     window.alert('Error');
+    }
   });
 }
 
 export const updateExperience = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/updateProfessionalExperience`, data)
   .then((resp) => {
     console.log(resp.data);
@@ -206,12 +257,17 @@ export const updateExperience = (data) => dispatch => {
       window.alert('Error in querying the database');
     }
   }).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`Error in updateExperience post call in profileActions.js: ${err}`);
     window.alert('Error');
+    }
   });
 }
 
 export const deleteEducation = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/deleteEducation`, data)
   .then((resp) => {
     console.log(resp.data);
@@ -226,12 +282,17 @@ export const deleteEducation = (data) => dispatch => {
       window.alert('Error in querying the database');
     }
   }).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`Error in deleteEducation post call in profileActions.js: ${err}`);
     window.alert('Error');
+    }
   });
 }
 
 export const deleteExperience = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${serverIp}:${serverPort}/deleteProfessionalExperience`, data)
   .then((resp) => {
     console.log(resp.data);
@@ -246,12 +307,17 @@ export const deleteExperience = (data) => dispatch => {
       window.alert('Error in querying the database');
     }
   }).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`Error in deleteExperience post call in profileActions.js: ${err}`);
     window.alert('Error');
+    }
   });
 }
 
 export const updateSkills = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.defaults.withCredentials = true;
   axios.post(`${serverIp}:${serverPort}/updateSkills`, data)
   .then((response) => {
@@ -265,7 +331,11 @@ export const updateSkills = (data) => dispatch => {
       window.location.reload();
     }
   }).catch((err) => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
     console.log(`In catch of axios post call to updateSkills api ${err}`);
     window.alert('Error in updateSkills component axios Post call');
+    }
   });
 }

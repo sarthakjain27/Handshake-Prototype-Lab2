@@ -3,6 +3,7 @@ import { serverIp, serverPort } from '../config';
 import axios from "axios";
 
 export const userAllConversations = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/getAllConversationsOfAUser',data)
   .then(response => {
     if(response.data){
@@ -21,11 +22,13 @@ export const userAllConversations = (data) => dispatch => {
     payload: search_result
   }))
   .catch(err => {
-    console.log('Error in userAllConversations in messageActions.js: '+err);
+    if(err.response.status === 401) window.alert('Unauthorized access')
+    else console.log('Error in userAllConversations in messageActions.js: '+err);
   });
 }
 
 export const addMessageInConversation = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/addMessageInAConversation',data)
   .then(response => {
     if(response.data === 'Error'){
@@ -35,11 +38,13 @@ export const addMessageInConversation = (data) => dispatch => {
       //getAllMessagesOfAConversation(data);
     }
   }).catch(err => {
-    console.log('Error in addMessageInConversation in messageActions.js: '+err);
+    if(err.response.status === 401) window.alert('Unauthorized access')
+    else console.log('Error in addMessageInConversation in messageActions.js: '+err);
   });
 }
 
 export const getAllMessagesOfAConversation = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/getAllMessageOFAConversation',data)
   .then(response => {
     if(response.data === 'Error'){
@@ -58,6 +63,7 @@ export const getAllMessagesOfAConversation = (data) => dispatch => {
     payload: search_result
   }))
   .catch(err => {
-    console.log('Error in getAllMessagesOfAConversation in messageActions.js: '+err);
+    if(err.response.status === 401) window.alert('Unauthorized access')
+    else console.log('Error in getAllMessagesOfAConversation in messageActions.js: '+err);
   });
 }

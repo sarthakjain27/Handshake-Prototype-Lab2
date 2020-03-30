@@ -3,6 +3,7 @@ import { serverIp, serverPort } from '../config';
 import axios from "axios";
 
 export const searchJob = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/getPostedJobs',data)
   .then(response => {
     if(response.data){
@@ -21,24 +22,34 @@ export const searchJob = (data) => dispatch => {
     payload: search_result
   }))
   .catch(err => {
-    console.log('Error in searchJob in jobActions.js '+err);
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    }else console.log('Error in searchJob in jobActions.js '+err);
   });
 }
 
 export const applyForJob = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   const config = { headers: { 'Content-Type': 'multipart/form-data'} };
   axios.post(serverIp+':'+serverPort+'/applyForJob', data, config)
   .then(response => dispatch({
     type: APPLY_FOR_JOB,
     payload: response.data
   }))
-  .catch(err => dispatch({
-    type: APPLY_FOR_JOB,
-    payload: 'Error in making applyForJob axios call'
-  }));
+  .catch(err => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else{
+      dispatch({
+        type: APPLY_FOR_JOB,
+        payload: 'Error in making applyForJob axios call'
+      })
+    }
+    });
 }
 
 export const listCreatedJobs = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/listCompanyPostedJobs',data)
   .then(response => {
     if(response.data){
@@ -57,22 +68,31 @@ export const listCreatedJobs = (data) => dispatch => {
     payload: search_result
   }))
   .catch(err => {
-    console.log('Error in listCreatedJobs in jobActions.js '+err);
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else console.log('Error in listCreatedJobs in jobActions.js '+err);
   });
 }
 
 export const updateStudentStatus = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/updateAppliedStudentJobStatus',data)
   .then(response => dispatch({
     type: APPLY_FOR_JOB,
     payload: response.data
-  })).catch(err => dispatch({
-    type: APPLY_FOR_JOB,
-    payload: 'Error in making updateAppliedStudentJobStatus axios call'
-  }))
+  })).catch(err => {
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else{
+      dispatch({
+        type: APPLY_FOR_JOB,
+        payload: 'Error in making updateAppliedStudentJobStatus axios call'
+      })
+    }})
 }
 
 export const createJob = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.defaults.withCredentials = true;
   axios.post(serverIp+':'+serverPort+'/createJobPost',data)
   .then(response => {
@@ -92,12 +112,17 @@ export const createJob = (data) => dispatch => {
     payload:result
   }))
   .catch(err => {
-    console.log(`In catch of axios post call to createJobPost  api ${err}`);
-    window.alert('Error in createJob component axios Post call');
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else {
+      console.log(`In catch of axios post call to createJobPost  api ${err}`);
+      window.alert('Error in createJob component axios Post call');
+    }
   })
 }
 
 export const listAppliedJobs = (data) => dispatch => {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/getAppliedJobs',data)
   .then(response => {
     if(response.data){
@@ -116,7 +141,9 @@ export const listAppliedJobs = (data) => dispatch => {
     payload: search_result
   }))
   .catch(err => {
-    console.log('Error in listAppliedJobs in jobActions.js '+err);
+    if(err.response.status === 401){
+      window.alert('Unauthorized access');
+    } else console.log('Error in listAppliedJobs in jobActions.js '+err);
   });
 }
 
