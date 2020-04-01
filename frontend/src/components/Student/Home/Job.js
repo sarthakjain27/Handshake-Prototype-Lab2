@@ -9,6 +9,7 @@ import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 class Job extends React.Component{
   constructor(props){
     super(props);
+    console.log(props);
     this.state = { 
       applicationShow:false,
       selectedFile:null

@@ -20,6 +20,10 @@ class StudentHome extends React.Component {
       selectedOption:'',
       userOptions:['Company Name','Job Title'],
       categoryOptions:['Full Time','Part Time','On Campus','Internship'],
+      sortOptions:['Location','Application Deadline','Posting Date'],
+      selectedSortOption:'',
+      sortDirections:['Ascending','Descending'],
+      selectedSortDirection:'',
       selectedCategoryFilter:'',
       filteredCity:'',
       noRecord:false,
@@ -35,6 +39,9 @@ class StudentHome extends React.Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.handleSearchReset = this.handleSearchReset.bind(this);
+    this.onChangeSelectedSortOptionHandler = this.onChangeSelectedSortOptionHandler.bind(this);
+    this.onChangeSelectedSortDirectionHandler = this.onChangeSelectedSortDirectionHandler.bind(this);
+    this.handleSort = this.handleSort.bind(this);
   }
 
   /*
@@ -182,8 +189,130 @@ class StudentHome extends React.Component {
       selectedOption: '',
       selectedCategoryFilter:'',
       filteredCity:'',
-      currentActivePage:1
+      currentActivePage:1,
+      selectedSortDirection:'',
+      selectedCategoryFilter:''
     })
+  }
+
+  onChangeSelectedSortOptionHandler(e){
+    this.setState({
+      selectedSortOption:e.value
+    });
+  }
+
+  onChangeSelectedSortDirectionHandler(e){
+    this.setState({
+      selectedSortDirection:e.value
+    });
+  }
+
+  handleSort(e){
+    e.preventDefault();
+    window.alert(`${this.state.selectedSortOption} | ${this.state.selectedSortDirection}`);
+    let field = '';
+    if(this.state.selectedSortOption === 'Location')
+      field = 'city';
+    else if(this.state.selectedSortOption === 'Application Deadline')
+      field = 'deadlineDate';
+    else if(this.state.selectedSortOption === 'Posting Date')
+      field = 'postingDate';
+    let oldStateFilteredJobs = this.state.filteredJobs;
+    if(this.state.selectedSortDirection === 'Ascending'){
+      if(field === 'deadlineDate' || field === 'postingDate')
+      {
+        oldStateFilteredJobs.sort(function(a,b){
+          let date1 = a[field].split("/");
+          let date2 = b[field].split("/");
+          if(parseInt(date1[2]) < parseInt(date2[2])){
+            return -1;
+          } else if(parseInt(date1[2]) > parseInt(date2[2]))
+            return 1;
+          else {
+            if(parseInt(date1[0]) < parseInt(date2[0])){
+              return -1;
+            } else if(parseInt(date1[0]) > parseInt(date2[0]))
+              return 1;
+            else {
+              if(parseInt(date1[1]) <= parseInt(date2[1])){
+                return -1;
+              } else if(parseInt(date1[1]) > parseInt(date2[1]))
+                return 1;
+            }
+          }
+        });
+      } else {
+        oldStateFilteredJobs.sort(function(a,b){
+          if(a[field]<b[field])
+            return -1;
+          else if(a[field]>b[field])
+            return 1;
+          else {
+            if(a['state']<b['state'])
+              return -1;
+            else if(a['state']>b['state'])
+              return 1;
+            else {
+              if(a['country'] <= b['country'])
+                return -1;
+              else return 1;
+            }
+          }
+        });
+      }
+      this.setState({
+        filteredJobs:oldStateFilteredJobs,
+        currentActivePage:1,
+      });
+    } else if(this.state.selectedSortDirection === 'Descending'){
+      if(field === 'deadlineDate' || field === 'postingDate')
+      {
+        oldStateFilteredJobs.sort(function(a,b){
+          let date1 = a[field].split("/");
+          let date2 = b[field].split("/");
+          if(parseInt(date1[2]) < parseInt(date2[2])){
+            return 1;
+          } else if(parseInt(date1[2]) > parseInt(date2[2]))
+            return -1;
+          else {
+            if(parseInt(date1[0]) < parseInt(date2[0])){
+              return 1;
+            } else if(parseInt(date1[0]) > parseInt(date2[0]))
+              return -1;
+            else {
+              if(parseInt(date1[1]) <= parseInt(date2[1])){
+                return 1;
+              } else if(parseInt(date1[1]) > parseInt(date2[1]))
+                return -1;
+            }
+          }
+        });
+      } else {
+        oldStateFilteredJobs.sort(function(a,b){
+          if(a[field]<b[field])
+            return 1;
+          else if(a[field]>b[field])
+            return -1;
+          else {
+            if(a['state']<b['state'])
+              return 1;
+            else if(a['state']>b['state'])
+              return -1;
+            else {
+              if(a['country'] <= b['country'])
+                return 1;
+              else return -1;
+            }
+          }
+        });
+      }
+      this.setState({
+        filteredJobs:oldStateFilteredJobs,
+        currentActivePage:1,
+      });
+    } else {
+      window.alert('Select appropriate Direction');
+    }
   }
 
   render() {
@@ -274,23 +403,63 @@ class StudentHome extends React.Component {
               <div className="main-relative-div-studentProfile">
                 <div className="row">
                   <div className="col-md-4">
-                    <div className="experienceHeading">
-                      <h2>Apply Filters</h2>
+                    <div>
+                      <div className="experienceHeading">
+                        <h2>Sort Results</h2>
+                      </div>
+                      <form onSubmit={this.handleSort}>
+                        <FormGroup row>
+                          <Col sm={8}>
+                            <div className="educationCard">
+                              <Dropdown
+                                options={this.state.sortOptions}
+                                onChange={this.onChangeSelectedSortOptionHandler}
+                                value={this.state.selectedSortOption}
+                                placeholder='Sorting Parameter'
+                              />
+                            </div>
+                          </Col>
+                          <Col sm={4}>
+                            <div className="educationCard">
+                            <Dropdown
+                                options={this.state.sortDirections}
+                                onChange={this.onChangeSelectedSortDirectionHandler}
+                                value={this.state.selectedSortDirection}
+                                placeholder='Direction'
+                              />
+                            </div>
+                          </Col>
+                        </FormGroup>
+                        <FormGroup check row>
+                          <Col sm={{offset:4}}>
+                            <Button color="primary" style={{width:100,height:50}}>Sort</Button>
+                          </Col>
+                        </FormGroup>
+                      </form>
                     </div>
-                    <form onSubmit={this.handleApplyFilter}>
-                      <div className="educationCard">
-                        <Dropdown
-                          options={this.state.categoryOptions}
-                          onChange={this.onChangeSelectedCategoryHandler}
-                          value={this.state.selectedCategoryFilter}
-                          placeholder='Select Job Category'
-                        />
+                    <div>
+                      <div className="experienceHeading">
+                        <h2>Apply Filters</h2>
                       </div>
-                      <div className="educationCard">
-                        <Input type="text" name="filteredCity" id="cityFilter" placeholder="City Filter" value={this.state.filteredCity} onChange={this.onChange}/>
-                      </div>
-                      <Button color="primary" style={{width:150,height:50}}>Filter</Button>
-                    </form>
+                      <form onSubmit={this.handleApplyFilter}>
+                        <div className="educationCard">
+                          <Dropdown
+                            options={this.state.categoryOptions}
+                            onChange={this.onChangeSelectedCategoryHandler}
+                            value={this.state.selectedCategoryFilter}
+                            placeholder='Select Job Category'
+                          />
+                        </div>
+                        <div className="educationCard">
+                          <Input type="text" name="filteredCity" id="cityFilter" placeholder="City Filter" value={this.state.filteredCity} onChange={this.onChange}/>
+                        </div>
+                        <Col sm={{offset:2}}>
+                          <Button color="primary" style={{width:100,height:50}}>Filter</Button>
+                          {' '}
+                          <Button color="info" style={{ width: 100, height: 50 }} onClick={this.handleReset}>Reset</Button>
+                        </Col>
+                      </form>
+                    </div>
                   </div>
                   <div className="col-md-8">
                     <div className="educationCard">
