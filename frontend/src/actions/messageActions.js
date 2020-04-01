@@ -28,22 +28,36 @@ export const userAllConversations = (data) => dispatch => {
 }
 
 export const addMessageInConversation = (data) => dispatch => {
+  console.log('addMessageInConversation called');
   axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/addMessageInAConversation',data)
   .then(response => {
     if(response.data === 'Error'){
       window.alert('Error in sending the message');
-    } else if(response.data === 'Success'){
-      window.alert('Successfully messaged');
-      //getAllMessagesOfAConversation(data);
+    } else {
+      // the below is done to show updated chats
+      console.log('Successfully messaged');
+      if(response.data.length === 0){
+        return {
+          noRecord: true
+        };
+      } else {
+        return {
+          allChats: response.data
+        };
+      }
     }
-  }).catch(err => {
-    if(err.response.status === 401) window.alert('Unauthorized access')
+  }).then(search_result => dispatch({
+    type: ALL_CHATS,
+    payload: search_result
+  })).catch(err => {
+    if(err.response && err.response.status === 401) window.alert('Unauthorized access')
     else console.log('Error in addMessageInConversation in messageActions.js: '+err);
   });
 }
 
 export const getAllMessagesOfAConversation = (data) => dispatch => {
+  console.log('Calling getAllMessagesOfAConversation');
   axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(serverIp+':'+serverPort+'/getAllMessageOFAConversation',data)
   .then(response => {

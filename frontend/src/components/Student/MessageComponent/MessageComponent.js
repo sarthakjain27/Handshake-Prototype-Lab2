@@ -27,6 +27,7 @@ class MessageComponent extends React.Component{
     this.sendMessage = this.sendMessage.bind(this);
     this.onChangeHandler = this.onChangeHandler.bind(this);
     this.capitalize = this.capitalize.bind(this);
+    this.convertTime = this.convertTime.bind(this);
   }
 
   componentDidMount(){
@@ -53,6 +54,7 @@ class MessageComponent extends React.Component{
           noRecordChat: chatList.noRecord
         });
       } else if(chatList.allChats){
+          console.log('componentWillReceiveProps Updated Chat List')
           console.log(chatList.allChats);
           let allBeautifulChats = []
           chatList.allChats.forEach((eachChat)=>{
@@ -64,7 +66,7 @@ class MessageComponent extends React.Component{
             var hour = jsDate.getHours();
             var min = jsDate.getMinutes();
             var sec = jsDate.getSeconds();
-            var time = date + ' ' + month + ' ' + year + ', ' + hour + ':' + min+':'+sec;
+            var time = date + ' ' + month + ' ' + year + ', ' + this.convertTime(hour + ':' + min);
 
             let leftOrRightMessage = eachChat.fromEmailId===localStorage.getItem('email_id') && eachChat.fromRole===localStorage.getItem('userRole')
                                       ? <div class="style__conversations-index-students-message___-uBy2">
@@ -132,10 +134,27 @@ class MessageComponent extends React.Component{
           this.setState({
             allChats: allBeautifulChats
           },()=>{
-            console.log('componentWillReceiveProps Updated Chat List')
+            //console.log('componentWillReceiveProps Updated Chat List')
             //console.log(this.state.allChats);
           });
       }
+    }
+  }
+
+  convertTime(time) {
+    const hourMinutes = time.split(':');
+    if (hourMinutes[0] < 12) {
+      if(hourMinutes[1] > 9)
+        return `${hourMinutes[0]}:${hourMinutes[1]} AM`;
+      else return `${hourMinutes[0]}:0${hourMinutes[1]} AM`;
+    } else if (hourMinutes[0] > 12) {
+      if(hourMinutes[1] > 9)
+        return `${hourMinutes[0] - 12}:${hourMinutes[1]} PM`;
+      else return `${hourMinutes[0] - 12}:0${hourMinutes[1]} PM`;
+    } else{
+      if(hourMinutes[1] > 9)
+        return `${hourMinutes[0]}:${hourMinutes[1]} PM`;
+      else return `${hourMinutes[0]}:0${hourMinutes[1]} PM`; 
     }
   }
 
@@ -159,7 +178,7 @@ class MessageComponent extends React.Component{
   }
 
   capitalize(word, splitParam = ' ') {
-    console.log(word);
+    //console.log(word);
     if (word) {
       word = word.split(splitParam).map((eachWord) => eachWord.split(' ').map((each) => each.charAt(0).toUpperCase() + each.substring(1)).join(' '));
       word = word.join(splitParam);
@@ -170,14 +189,12 @@ class MessageComponent extends React.Component{
 
   sendMessage(e){
     e.preventDefault();
-    console.log('Inside send Message');
-    console.log(this.state.inputMessage)
     this.props.addMessageInConversation({fromEmailId:localStorage.getItem('email_id'),
                                           fromRole:localStorage.getItem('userRole'),
                                           toEmailId:this.state.otherParticipantEmailId,
                                           toRole:this.state.otherParticipantRole,
                                           message:this.state.inputMessage});
-    //this.showChats(this.state.otherParticipantEmailId,this.state.otherParticipantRole);
+    
   }
 
   conversationButtons(){
@@ -194,7 +211,7 @@ class MessageComponent extends React.Component{
           otherParticipantName = eachConversation.participant2Name;
           otherParticipantProfileLink = serverIp+':'+serverPort+'/'+eachConversation.participant2ProfilePictureUrl;
         } 
-        console.log('Other Participant profile picture link: '+otherParticipantProfileLink);
+        //console.log('Other Participant profile picture link: '+otherParticipantProfileLink);
         let each = 
         <div>
           <button type="button" class="style__conversations-index-students-conversation-list-item___JflUk" tabIndex="0" aria-pressed="true" onClick={()=>this.showChats(otherParticipantEmailId,otherParticipantRole, otherParticipantName, otherParticipantProfileLink)}>

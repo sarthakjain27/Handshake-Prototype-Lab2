@@ -52,7 +52,9 @@ const addMessageInAConversation = (req, res) => {
           res.send('Error');
         }
         console.log('Message successfully pushed into existing conversation');
-        res.send('Success');
+        //res.send('Success');
+        // below is done to show updated chats on clicking send
+        res.send(result.chat);
       });
     }
   });

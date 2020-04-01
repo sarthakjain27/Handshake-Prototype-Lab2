@@ -27,6 +27,7 @@ class MessageComponent extends React.Component{
     this.sendMessage = this.sendMessage.bind(this);
     this.onChangeHandler = this.onChangeHandler.bind(this);
     this.capitalize = this.capitalize.bind(this);
+    this.convertTime = this.convertTime.bind(this);
   }
 
   componentDidMount(){
@@ -64,7 +65,7 @@ class MessageComponent extends React.Component{
             var hour = jsDate.getHours();
             var min = jsDate.getMinutes();
             var sec = jsDate.getSeconds();
-            var time = date + ' ' + month + ' ' + year + ', ' + hour + ':' + min+':'+sec;
+            var time = date + ' ' + month + ' ' + year + ', ' + this.convertTime(hour + ':' + min);
 
             let leftOrRightMessage = eachChat.fromEmailId===localStorage.getItem('email_id') && eachChat.fromRole===localStorage.getItem('userRole')
                                       ? <div class="style__conversations-index-students-message___-uBy2">
@@ -168,6 +169,23 @@ class MessageComponent extends React.Component{
     return '';
   }
 
+  convertTime(time) {
+    const hourMinutes = time.split(':');
+    if (hourMinutes[0] < 12) {
+      if(hourMinutes[1] > 9)
+        return `${hourMinutes[0]}:${hourMinutes[1]} AM`;
+      else return `${hourMinutes[0]}:0${hourMinutes[1]} AM`;
+    } else if (hourMinutes[0] > 12) {
+      if(hourMinutes[1] > 9)
+        return `${hourMinutes[0] - 12}:${hourMinutes[1]} PM`;
+      else return `${hourMinutes[0] - 12}:0${hourMinutes[1]} PM`;
+    } else{
+      if(hourMinutes[1] > 9)
+        return `${hourMinutes[0]}:${hourMinutes[1]} PM`;
+      else return `${hourMinutes[0]}:0${hourMinutes[1]} PM`; 
+    }
+  }
+
   sendMessage(e){
     e.preventDefault();
     console.log('Inside send Message');
@@ -177,7 +195,6 @@ class MessageComponent extends React.Component{
                                           toEmailId:this.state.otherParticipantEmailId,
                                           toRole:this.state.otherParticipantRole,
                                           message:this.state.inputMessage});
-    //this.showChats(this.state.otherParticipantEmailId,this.state.otherParticipantRole);
   }
 
   conversationButtons(){
