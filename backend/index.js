@@ -3,13 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const bcrypt = require('bcrypt');
 const cors = require('cors');
 const multer = require('multer');
 
-const saltRounds = 10;
-
-const Database=require('./Database');
 const Config = require('./config');
 const Signup = require('./apis/signup');
 const Login = require('./apis/login');
@@ -46,11 +42,11 @@ app.use(express.static('./WebsiteImages'));
 
 
 app.post('/signup', (req, res) => {
-  Signup.signup(req, res, bcrypt, saltRounds);
+  Signup.signup(req, res);
 });
 
 app.post('/login', (req, res) => {
-  Login.login(req, res, bcrypt);
+  Login.login(req, res);
 });
 
 app.post('/createJobPost', checkAuth, (req, res) => {
