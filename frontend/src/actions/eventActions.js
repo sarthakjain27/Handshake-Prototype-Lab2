@@ -1,4 +1,4 @@
-import { SEARCH_EVENT, APPLY_FOR_EVENT, COMPANY_POSTED_EVENTS, CREATE_EVENT } from './types';
+import { SEARCH_EVENT, COMPANY_POSTED_EVENTS, CREATE_EVENT } from './types';
 import { serverIp, serverPort } from '../config';
 import axios from "axios";
 

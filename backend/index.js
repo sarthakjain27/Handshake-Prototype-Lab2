@@ -198,6 +198,8 @@ app.post('/getAllConversationsOfAUser', checkAuth, (req, res)=>{
   MessageComponent.getAllConversations(req, res);
 })
 
+module.exports = app;
+
 const server = app.listen(3001, () => {
   console.log('Server listening on port 3001');
 });

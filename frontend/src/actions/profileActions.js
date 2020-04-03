@@ -1,4 +1,4 @@
-import { REGISTERED_STUDENTS, STUDENT_EDUCATION, COMPANY_PROFILE, UPDATE_PROFILE, STUDENT_PROFILE } from './types';
+import { REGISTERED_STUDENTS, COMPANY_PROFILE, STUDENT_PROFILE } from './types';
 import { serverIp, serverPort } from '../config';
 import axios from "axios";
 

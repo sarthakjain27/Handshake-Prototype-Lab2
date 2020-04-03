@@ -1,6 +1,6 @@
 import React from 'react';
 import './StudentProfile.css';
-import { Tooltip, Col, FormGroup, Label, FormText, Input } from 'reactstrap';
+import { Tooltip, Col, FormGroup} from 'reactstrap';
 import {
   Card, Button, Modal
 } from 'react-bootstrap';

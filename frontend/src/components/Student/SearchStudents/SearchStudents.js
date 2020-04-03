@@ -3,7 +3,6 @@ import { Card, Image, Alert } from 'react-bootstrap';
 import {
   Col, Button, FormGroup, Input, Pagination, PaginationItem, PaginationLink
 } from 'reactstrap';
-import axios from 'axios';
 import Dropdown from 'react-dropdown';
 import { connect } from 'react-redux';
 import { searchStudents } from '../../../actions/searchActions';

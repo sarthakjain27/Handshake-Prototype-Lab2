@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import {
   Col, Button, FormGroup, Label, Input,
 } from 'reactstrap';
@@ -7,7 +6,6 @@ import { connect } from 'react-redux';
 import { updateEducation } from '../../../actions/profileActions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Select from 'react-select';
-import { serverIp, serverPort } from '../../../config';
 import CustomNavBar from '../../NavBar/CustomNavBar';
 
 class EditEducation extends React.Component {

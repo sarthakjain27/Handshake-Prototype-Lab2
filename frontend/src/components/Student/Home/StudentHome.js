@@ -190,8 +190,7 @@ class StudentHome extends React.Component {
       selectedCategoryFilter:'',
       filteredCity:'',
       currentActivePage:1,
-      selectedSortDirection:'',
-      selectedCategoryFilter:''
+      selectedSortDirection:''
     })
   }
 

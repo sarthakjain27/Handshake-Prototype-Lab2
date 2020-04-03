@@ -1,4 +1,4 @@
-import { SEARCH_EVENT, APPLY_FOR_EVENT, COMPANY_POSTED_EVENTS, CREATE_EVENT } from '../actions/types';
+import { SEARCH_EVENT, COMPANY_POSTED_EVENTS, CREATE_EVENT } from '../actions/types';
 const initialState = {
   events: {},
   createEvent: ''

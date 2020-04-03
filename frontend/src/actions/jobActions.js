@@ -1,4 +1,4 @@
-import { SEARCH_JOB, APPLY_FOR_JOB, COMPANY_POSTED_JOBS, CREATE_JOB_POST, CREATE_EVENT, APPLIED_JOBS } from "./types";
+import { SEARCH_JOB, APPLY_FOR_JOB, COMPANY_POSTED_JOBS, CREATE_JOB_POST, APPLIED_JOBS } from "./types";
 import { serverIp, serverPort } from '../config';
 import axios from "axios";
 
