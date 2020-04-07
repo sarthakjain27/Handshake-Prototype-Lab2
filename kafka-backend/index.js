@@ -32,7 +32,7 @@ var GetStudentsRegisteredInAEvent = require('./services/getStudentsRegisteredInA
 var SearchStudents = require('./services/searchStudents');
 var AddMessageInAConversation = require('./services/addMessageInAConversation');
 var GetAllMessageOFAConversation = require('./services/getAllMessageOFAConversation');
-var GetAllConversationsOfAUser = require('./services/GetAllConversationsOfAUser');
+var GetAllConversationsOfAUser = require('./services/getAllConversationsOfAUser');
 
 
 function handleTopicRequest(topic_name,fname){
