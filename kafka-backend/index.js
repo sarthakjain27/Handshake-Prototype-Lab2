@@ -39,9 +39,9 @@ function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
     var consumer = connection.getConsumer(topic_name);
     var producer = connection.getProducer();
-    console.log('server is running ');
+    console.log('Kafka server is running ');
     consumer.on('message', function (message) {
-        console.log('message received for ' + topic_name +" ", fname);
+        console.log('message received for ' + topic_name);
         console.log(JSON.stringify(message.value));
         var data = JSON.parse(message.value);
         

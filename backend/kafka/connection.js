@@ -5,8 +5,8 @@ function ConnectionProvider() {
         //if (!this.kafkaConsumerConnection) {
 
             // getConsumer is connected to localhost:2181 where zookeeper is running
-            //this.client = new kafka.Client("localhost:2181");
-            this.client = new kafka.Client("10.0.0.40:2181");
+            this.client = new kafka.Client("localhost:2181");
+            //this.client = new kafka.Client("10.0.0.40:2181");
             /*this.client.refreshMetadata([{topic: topic_name}], (err) => {
                 if (err) {
                     console.warn('Error refreshing kafka metadata', err);
@@ -24,8 +24,8 @@ function ConnectionProvider() {
 
         if (!this.kafkaProducerConnection) {
             // getProducer is connected to localhost:2181 where zookeeper is running
-            //this.client = new kafka.Client("localhost:2181");
-            this.client = new kafka.Client("10.0.0.40:2181");
+            this.client = new kafka.Client("localhost:2181");
+            //this.client = new kafka.Client("10.0.0.40:2181");
             /*this.client.refreshMetadata([{topic: topic_name}], (err) => {
                 if (err) {
                     console.warn('Error refreshing kafka metadata', err);
