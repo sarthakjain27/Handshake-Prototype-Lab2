@@ -3,8 +3,8 @@ import {
   Col, Button, FormGroup, Label, Input,
 } from 'reactstrap';
 import { connect } from 'react-redux';
-import { createEducation } from '../../../actions/profileActions';
 import Select from 'react-select';
+import { createEducation } from '../../../actions/profileActions';
 import CustomNavBar from '../../NavBar/CustomNavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -37,9 +37,9 @@ class AddEducation extends React.Component {
     this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  onChangeHandler(e){
+  onChangeHandler(e) {
     this.setState({
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -66,7 +66,7 @@ class AddEducation extends React.Component {
         major: this.state.major.value,
         yearOfPassing: this.state.yearOfPassing,
         cgpa: this.state.cgpa,
-        emailId:localStorage.getItem('email_id')
+        emailId: localStorage.getItem('email_id'),
       };
       this.props.createEducation(data);
     }
@@ -144,8 +144,8 @@ class AddEducation extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  
+const mapStateToProps = (state) => ({
+
 });
 
 export default connect(mapStateToProps, { createEducation })(AddEducation);

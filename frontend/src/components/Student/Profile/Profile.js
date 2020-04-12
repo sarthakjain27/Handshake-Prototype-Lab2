@@ -3,8 +3,8 @@ import {
   Col, Button, FormGroup, Label, Input, FormText,
 } from 'reactstrap';
 import { connect } from 'react-redux';
-import { getStudentProfile, updateStudentProfile } from '../../../actions/profileActions';
 import DatePicker from 'react-datepicker';
+import { getStudentProfile, updateStudentProfile } from '../../../actions/profileActions';
 import CustomNavBar from '../../NavBar/CustomNavBar';
 import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -19,7 +19,7 @@ class Profile extends React.Component {
       country: '',
       contactPhone: '',
       contactEmail: '',
-      careerObjective:'',
+      careerObjective: '',
       dateOfBirth: new Date(),
       selectedFile: null,
     };
@@ -31,38 +31,38 @@ class Profile extends React.Component {
 
   componentDidMount() {
     if (!this.props.match.params.id) {
-      this.props.getStudentProfile({emailId:localStorage.getItem('email_id')});
+      this.props.getStudentProfile({ emailId: localStorage.getItem('email_id') });
     } else {
       console.log(this.props);
-      this.props.getStudentProfile({emailId:this.props.match.params.id});
+      this.props.getStudentProfile({ emailId: this.props.match.params.id });
     }
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     console.log(nextProps);
     if (nextProps.profile) {
-      var { profile } = nextProps;
+      const { profile } = nextProps;
       let prevBirthDate = '';
-      if(profile.dateOfBirth !== ''){
-        prevBirthDate=new Date(profile.dateOfBirth.split('/')[0], parseInt(profile.dateOfBirth.split('/')[1]) - 1, profile.dateOfBirth.split('/')[2]);
+      if (profile.dateOfBirth !== '') {
+        prevBirthDate = new Date(profile.dateOfBirth.split('/')[0], parseInt(profile.dateOfBirth.split('/')[1]) - 1, profile.dateOfBirth.split('/')[2]);
       } else prevBirthDate = new Date();
       this.setState({
-        studentName:profile.name,
-        collegeName:profile.collegeName,
-        dateOfBirth:prevBirthDate,
-        city:profile.city,
-        cstate:profile.state,
-        country:profile.country,
-        careerObjective:profile.careerObjective,
-        contactPhone:profile.contactPhone,
-        contactEmail:profile.contactEmail
+        studentName: profile.name,
+        collegeName: profile.collegeName,
+        dateOfBirth: prevBirthDate,
+        city: profile.city,
+        cstate: profile.state,
+        country: profile.country,
+        careerObjective: profile.careerObjective,
+        contactPhone: profile.contactPhone,
+        contactEmail: profile.contactEmail,
       });
     }
   }
 
-  onChangeHandler(e){
+  onChangeHandler(e) {
     this.setState({
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -97,9 +97,9 @@ class Profile extends React.Component {
       fd.append('contact_email', this.state.contactEmail);
       fd.append('dateOfBirth', `${this.state.dateOfBirth.getFullYear()}/${this.state.dateOfBirth.getMonth() + 1}/${this.state.dateOfBirth.getDate()}`);
       fd.append('file', this.state.selectedFile);
-      
+
       // for (var pair of fd.entries()) {
-      //   console.log(pair[0]+ ': ' + pair[1]); 
+      //   console.log(pair[0]+ ': ' + pair[1]);
       // }
       this.props.updateStudentProfile(fd);
     }
@@ -189,8 +189,8 @@ class Profile extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  profile: state.profile.user
+const mapStateToProps = (state) => ({
+  profile: state.profile.user,
 });
 
 export default connect(mapStateToProps, { getStudentProfile, updateStudentProfile })(Profile);

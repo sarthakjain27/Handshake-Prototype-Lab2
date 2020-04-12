@@ -36,7 +36,7 @@ class Education extends React.Component {
 
   deleteEducationDetails(e) {
     e.preventDefault();
-    this.props.deleteEducation({educationId: this.props.education._id,emailId:localStorage.getItem('email_id')});
+    this.props.deleteEducation({ educationId: this.props.education._id, emailId: localStorage.getItem('email_id') });
   }
 
   render() {
@@ -89,8 +89,8 @@ class Education extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  
+const mapStateToProps = (state) => ({
+
 });
 
 export default connect(mapStateToProps, { deleteEducation })(Education);

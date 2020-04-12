@@ -36,7 +36,7 @@ class Experience extends React.Component {
 
   deleteExperienceDetails(e) {
     e.preventDefault();
-    this.props.deleteExperience({ experienceId: this.props.experience._id, emailId:localStorage.getItem('email_id') });
+    this.props.deleteExperience({ experienceId: this.props.experience._id, emailId: localStorage.getItem('email_id') });
   }
 
   render() {
@@ -92,8 +92,8 @@ class Experience extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  
+const mapStateToProps = (state) => ({
+
 });
 
 export default connect(mapStateToProps, { deleteExperience })(Experience);

@@ -46,9 +46,9 @@ class NewEventPost extends React.Component {
     this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  onChangeHandler(e){
+  onChangeHandler(e) {
     this.setState({
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -110,9 +110,9 @@ class NewEventPost extends React.Component {
         companyId: localStorage.getItem('company_id'),
         time: this.state.time, // time goes like military hours 13:00, 14:00, 16:00 see Event.js of company to convert in AM/PM
         date: formattedDate,
-        //eligibility: JSON.stringify(selectedM),
+        // eligibility: JSON.stringify(selectedM),
         eligibility: selectedM,
-        emailId: localStorage.getItem('email_id')
+        emailId: localStorage.getItem('email_id'),
       };
       console.log(data);
       this.props.createEvent(data);
@@ -126,11 +126,11 @@ class NewEventPost extends React.Component {
       sessionStorage.clear();
       window.location.href = '/';
     }
-    if(this.props.status.error || this.props.status.success){
-      if(this.props.status.error){
-        this.props.updateApplyForJobStatus({type:CREATE_EVENT, value:{}})
+    if (this.props.status.error || this.props.status.success) {
+      if (this.props.status.error) {
+        this.props.updateApplyForJobStatus({ type: CREATE_EVENT, value: {} });
         window.alert('Error in creating the given Event');
-      } else if(this.props.status.success){
+      } else if (this.props.status.success) {
         window.alert('Successfully created the given Event Posting');
         window.location.href = '/listEvents';
       }
@@ -300,8 +300,8 @@ class NewEventPost extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  status: state.event.createEvent
+const mapStateToProps = (state) => ({
+  status: state.event.createEvent,
 });
 
 export default connect(mapStateToProps, { createEvent, updateApplyForJobStatus })(NewEventPost);

@@ -1,12 +1,13 @@
 import React from 'react';
 import {
   Col, Button, Input,
+  Pagination, PaginationItem, PaginationLink,
 } from 'reactstrap';
 import CustomNavBar from '../../NavBar/CustomNavBar';
 import { connect } from 'react-redux';
 import '../../../../node_modules/react-dropdown/style.css';
 import { Alert } from 'react-bootstrap';
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+
 import EventCard from './EventCard';
 import './ListEvents.css';
 import { searchEvent } from '../../../actions/eventActions';
@@ -18,9 +19,9 @@ class StudentListEvents extends React.Component {
     this.state = {
       searchValue: '',
       filteredEvents: [],
-      noRecord:false,
-      currentActivePage:1,
-      jobsToShow:3
+      noRecord: false,
+      currentActivePage: 1,
+      jobsToShow: 3,
     };
     this.returnEventsCards = this.returnEventsCards.bind(this);
     this.searchValueChangeHandler = this.searchValueChangeHandler.bind(this);
@@ -36,31 +37,32 @@ class StudentListEvents extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.searchResult) {
-      var { searchResult } = nextProps;
+      const { searchResult } = nextProps;
 
-      if(searchResult.noRecord){
-          this.setState({
-              noRecord: searchResult.noRecord,
-              filteredEvents: []
-          });
+      if (searchResult.noRecord) {
+        this.setState({
+          noRecord: searchResult.noRecord,
+          filteredEvents: [],
+        });
       } else {
-          this.setState({
-            filteredEvents: searchResult.eventList
-          });
-        }
+        this.setState({
+          filteredEvents: searchResult.eventList,
+        });
+      }
     }
   }
 
   returnEventsCards() {
-    if(this.state.filteredEvents.length > 0){
-      let eachPageJobCards = [], numberOfJobsToShowPerPage = this.state.jobsToShow
-      let activePage = this.state.currentActivePage;
+    if (this.state.filteredEvents.length > 0) {
+      const eachPageJobCards = []; const
+        numberOfJobsToShowPerPage = this.state.jobsToShow;
+      const activePage = this.state.currentActivePage;
       let count = 0;
-      for(let i=(activePage-1)*numberOfJobsToShowPerPage;i<this.state.filteredEvents.length && count < numberOfJobsToShowPerPage;i++,count++){
-        eachPageJobCards.push(<EventCard event={this.state.filteredEvents[i]} key={i} showRegisterButton/>)
+      for (let i = (activePage - 1) * numberOfJobsToShowPerPage; i < this.state.filteredEvents.length && count < numberOfJobsToShowPerPage; i++, count++) {
+        eachPageJobCards.push(<EventCard event={this.state.filteredEvents[i]} key={i} showRegisterButton />);
       }
       return eachPageJobCards;
-    } else return [];
+    } return [];
   }
 
   searchValueChangeHandler(e) {
@@ -74,7 +76,7 @@ class StudentListEvents extends React.Component {
     this.props.searchEvent({});
     this.setState({
       searchValue: '',
-      noRecord:false
+      noRecord: false,
     });
   }
 
@@ -86,18 +88,18 @@ class StudentListEvents extends React.Component {
     this.props.searchEvent(data);
   }
 
-  onPageChange(e){
+  onPageChange(e) {
     console.log(e.target.value);
     let currentPage = this.state.currentActivePage;
-    if (e.target.value === "next" ) {
+    if (e.target.value === 'next') {
       currentPage += 1;
-    } else if (e.target.value === "prev") {
+    } else if (e.target.value === 'prev') {
       currentPage -= 1;
-    } else if(currentPage!==parseInt(e.target.value)) {
-        currentPage = parseInt(e.target.value);
+    } else if (currentPage !== parseInt(e.target.value)) {
+      currentPage = parseInt(e.target.value);
     } else return;
     this.setState({
-        currentActivePage: currentPage
+      currentActivePage: currentPage,
     });
   }
 
@@ -107,33 +109,38 @@ class StudentListEvents extends React.Component {
       window.sessionStorage.clear();
       window.location.href = '/';
     }
-    let noRecordFoundMessage = "";
-    if(this.state.noRecord){
-      noRecordFoundMessage = <Alert variant="info">
-                No Event Postings available right now. Please try again after some time.
-                </Alert>
-    } 
+    let noRecordFoundMessage = '';
+    if (this.state.noRecord) {
+      noRecordFoundMessage = (
+        <Alert variant="info">
+          No Event Postings available right now. Please try again after some time.
+        </Alert>
+      );
+    }
     let pagesBar = null;
-    if(this.state.filteredEvents.length > 0){
-      let totalPageCount = Math.ceil(this.state.filteredEvents.length / this.state.jobsToShow);
-      let allPages = []
-      for(let i=1; i<=totalPageCount;i++){
+    if (this.state.filteredEvents.length > 0) {
+      const totalPageCount = Math.ceil(this.state.filteredEvents.length / this.state.jobsToShow);
+      const allPages = [];
+      for (let i = 1; i <= totalPageCount; i++) {
         allPages.push(
-          <PaginationItem active={i===this.state.currentActivePage}>
-          <PaginationLink name={i} value={i} onClick={this.onPageChange}>
-            {i}
+          <PaginationItem active={i === this.state.currentActivePage}>
+            <PaginationLink name={i} value={i} onClick={this.onPageChange}>
+              {i}
             </PaginationLink>
-          </PaginationItem>);
+          </PaginationItem>,
+        );
       }
-      pagesBar = <Pagination aria-label="Page navigation example">
-                    <PaginationItem disabled={this.state.currentActivePage===1}>
-                      <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
-                    </PaginationItem> 
-                    {allPages}
-                    <PaginationItem disabled={this.state.currentActivePage===totalPageCount}>
-                      <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
-                    </PaginationItem>
-                  </Pagination>
+      pagesBar = (
+        <Pagination aria-label="Page navigation example">
+          <PaginationItem disabled={this.state.currentActivePage === 1}>
+            <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
+          </PaginationItem>
+          {allPages}
+          <PaginationItem disabled={this.state.currentActivePage === totalPageCount}>
+            <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
+          </PaginationItem>
+        </Pagination>
+      );
     }
     return (
       <div>
@@ -178,8 +185,8 @@ class StudentListEvents extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  searchResult: state.event.events
+const mapStateToProps = (state) => ({
+  searchResult: state.event.events,
 });
 
 export default connect(mapStateToProps, { searchEvent, getStudentAllEducation })(StudentListEvents);

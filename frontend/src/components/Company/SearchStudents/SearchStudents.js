@@ -1,11 +1,11 @@
 import React from 'react';
 import { Card, Image, Alert } from 'react-bootstrap';
 import {
-  Col, Button, FormGroup, Input, Pagination, PaginationItem, PaginationLink
+  Col, Button, FormGroup, Input, Pagination, PaginationItem, PaginationLink,
 } from 'reactstrap';
 import Dropdown from 'react-dropdown';
-import { serverIp, serverPort } from '../../../config';
 import { connect } from 'react-redux';
+import { serverIp, serverPort } from '../../../config';
 import { searchStudents } from '../../../actions/searchActions';
 import CustomNavBar from '../../NavBar/CustomNavBar';
 import '../../../../node_modules/react-dropdown/style.css';
@@ -20,9 +20,9 @@ class CompanySearchStudents extends React.Component {
       userOption: ['Student Name', 'College Name', 'Skill Name'],
       selectedOption: '',
       searchValue: '',
-      noRecord:false,
-      currentActivePage:1,
-      jobsToShow:5
+      noRecord: false,
+      currentActivePage: 1,
+      jobsToShow: 5,
     };
     this.searchForStudents = this.searchForStudents.bind(this);
     this.onChangeSelectedOptionHandler = this.onChangeSelectedOptionHandler.bind(this);
@@ -37,19 +37,19 @@ class CompanySearchStudents extends React.Component {
     this.props.searchStudents({ searchParam: 'ALL' });
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     if (nextProps.searchResult) {
-      var { searchResult } = nextProps;
-      if(searchResult.noRecord){
-          this.setState({
-              noRecord: searchResult.noRecord,
-              students:[]
-          });
+      const { searchResult } = nextProps;
+      if (searchResult.noRecord) {
+        this.setState({
+          noRecord: searchResult.noRecord,
+          students: [],
+        });
       } else {
-          this.setState({
-            students:searchResult.studentList
-          });
-        }
+        this.setState({
+          students: searchResult.studentList,
+        });
+      }
     }
   }
 
@@ -66,50 +66,51 @@ class CompanySearchStudents extends React.Component {
   }
 
   displayStudentsHandler() {
-    if(this.state.students.length > 0)
-    {
-      let eachPageJobCards = [], numberOfJobsToShowPerPage = this.state.jobsToShow
-      let activePage = this.state.currentActivePage;
+    if (this.state.students.length > 0) {
+      const eachPageJobCards = []; const
+        numberOfJobsToShowPerPage = this.state.jobsToShow;
+      const activePage = this.state.currentActivePage;
       let count = 0;
-      for(let i=(activePage-1)*numberOfJobsToShowPerPage;i<this.state.students.length && count < numberOfJobsToShowPerPage;i++,count++){
-        let eachStudent = this.state.students[i];
+      for (let i = (activePage - 1) * numberOfJobsToShowPerPage; i < this.state.students.length && count < numberOfJobsToShowPerPage; i++, count++) {
+        const eachStudent = this.state.students[i];
         let imgSrc = `${serverIp}:${serverPort}/default.png`;
         if (eachStudent.profilePictureUrl !== '') {
           imgSrc = `${serverIp}:${serverPort}/${eachStudent.profilePictureUrl}`;
         }
         eachPageJobCards.push(
-        <div>
           <div>
-            <Card border="primary">
-              <Card.Body>
-                <Card.Title>
-                  <Image
-                    src={imgSrc}
-                    alt="Profile Picture"
-                    roundedCircle
-                    style={{ height: 40, width: 40 }}
-                  />
-                  {' '}
-                  {' '}
-                  <a href={`/StudentProfile/${eachStudent.emailId}`}>{this.capitalize(eachStudent.name)}</a>
-                </Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">
-                  {this.capitalize(eachStudent.collegeName)}
-                </Card.Subtitle>
-                <Card.Text>
-                  <b>Career Objective</b>
-                  {' '}
-                  <br />
-                  {eachStudent.careerObjective}
-                </Card.Text>
-              </Card.Body>
-            </Card>
-            <br />
-          </div>
-        </div>)
+            <div>
+              <Card border="primary">
+                <Card.Body>
+                  <Card.Title>
+                    <Image
+                      src={imgSrc}
+                      alt="Profile Picture"
+                      roundedCircle
+                      style={{ height: 40, width: 40 }}
+                    />
+                    {' '}
+                    {' '}
+                    <a href={`/StudentProfile/${eachStudent.emailId}`}>{this.capitalize(eachStudent.name)}</a>
+                  </Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {this.capitalize(eachStudent.collegeName)}
+                  </Card.Subtitle>
+                  <Card.Text>
+                    <b>Career Objective</b>
+                    {' '}
+                    <br />
+                    {eachStudent.careerObjective}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+              <br />
+            </div>
+          </div>,
+        );
       }
       return eachPageJobCards;
-    } else return [];
+    } return [];
   }
 
   searchForStudents(e) {
@@ -131,18 +132,18 @@ class CompanySearchStudents extends React.Component {
     }
   }
 
-  onPageChange(e){
+  onPageChange(e) {
     console.log(e.target.value);
     let currentPage = this.state.currentActivePage;
-    if (e.target.value === "next" ) {
+    if (e.target.value === 'next') {
       currentPage += 1;
-    } else if (e.target.value === "prev") {
+    } else if (e.target.value === 'prev') {
       currentPage -= 1;
-    } else if(currentPage!==parseInt(e.target.value)) {
-        currentPage = parseInt(e.target.value);
+    } else if (currentPage !== parseInt(e.target.value)) {
+      currentPage = parseInt(e.target.value);
     } else return;
     this.setState({
-        currentActivePage: currentPage
+      currentActivePage: currentPage,
     });
   }
 
@@ -152,8 +153,8 @@ class CompanySearchStudents extends React.Component {
     this.setState({
       searchValue: '',
       selectedOption: '',
-      noRecord:false,
-      currentActivePage:1
+      noRecord: false,
+      currentActivePage: 1,
     });
   }
 
@@ -172,37 +173,44 @@ class CompanySearchStudents extends React.Component {
       window.sessionStorage.clear();
       window.location.href = '/';
     }
-    let noRecordFoundMessage = "";
-    if(this.state.searchValue === "" && this.state.noRecord){
-      noRecordFoundMessage = <Alert variant="info">
-                No Students available right now. Please try again after some time.
-                </Alert>
-    } else if(this.state.noRecord){
-      noRecordFoundMessage = <Alert variant="info">
-                No Students matches your criteria. Please try again.
-                </Alert>
+    let noRecordFoundMessage = '';
+    if (this.state.searchValue === '' && this.state.noRecord) {
+      noRecordFoundMessage = (
+        <Alert variant="info">
+          No Students available right now. Please try again after some time.
+        </Alert>
+      );
+    } else if (this.state.noRecord) {
+      noRecordFoundMessage = (
+        <Alert variant="info">
+          No Students matches your criteria. Please try again.
+        </Alert>
+      );
     }
     let pagesBar = null;
-    if(this.state.students.length > 0){
-      let totalPageCount = Math.ceil(this.state.students.length / this.state.jobsToShow);
-      let allPages = []
-      for(let i=1; i<=totalPageCount;i++){
+    if (this.state.students.length > 0) {
+      const totalPageCount = Math.ceil(this.state.students.length / this.state.jobsToShow);
+      const allPages = [];
+      for (let i = 1; i <= totalPageCount; i++) {
         allPages.push(
-          <PaginationItem active={i===this.state.currentActivePage}>
-          <PaginationLink name={i} value={i} onClick={this.onPageChange}>
-            {i}
+          <PaginationItem active={i === this.state.currentActivePage}>
+            <PaginationLink name={i} value={i} onClick={this.onPageChange}>
+              {i}
             </PaginationLink>
-          </PaginationItem>);
+          </PaginationItem>,
+        );
       }
-      pagesBar = <Pagination aria-label="Page navigation example">
-                    <PaginationItem disabled={this.state.currentActivePage===1}>
-                      <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
-                    </PaginationItem> 
-                    {allPages}
-                    <PaginationItem disabled={this.state.currentActivePage===totalPageCount}>
-                      <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
-                    </PaginationItem>
-                  </Pagination>
+      pagesBar = (
+        <Pagination aria-label="Page navigation example">
+          <PaginationItem disabled={this.state.currentActivePage === 1}>
+            <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
+          </PaginationItem>
+          {allPages}
+          <PaginationItem disabled={this.state.currentActivePage === totalPageCount}>
+            <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
+          </PaginationItem>
+        </Pagination>
+      );
     }
     return (
       <div>
@@ -283,8 +291,8 @@ class CompanySearchStudents extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  searchResult: state.search.students
+const mapStateToProps = (state) => ({
+  searchResult: state.search.students,
 });
 
 export default connect(mapStateToProps, { searchStudents })(CompanySearchStudents);

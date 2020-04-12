@@ -22,16 +22,16 @@ class EditExperience extends React.Component {
       description: sessionStorage.getItem('work_description'),
       experienceId: sessionStorage.getItem('experience_id'),
     };
-    
+
     this.startDateChangeHandler = this.startDateChangeHandler.bind(this);
     this.endDateChangeHandler = this.endDateChangeHandler.bind(this);
     this.submitChangeHandler = this.submitChangeHandler.bind(this);
     this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  onChangeHandler(e){
+  onChangeHandler(e) {
     this.setState({
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -62,7 +62,7 @@ class EditExperience extends React.Component {
         description: this.state.description,
         startDate: `${this.state.startDate.getFullYear()}/${this.state.startDate.getMonth() + 1}/${this.state.startDate.getDate()}`,
         experienceId: this.state.experienceId,
-        emailId: localStorage.getItem('email_id')
+        emailId: localStorage.getItem('email_id'),
       };
       if (this.state.endDate === '') {
         data.endDate = '';
@@ -150,8 +150,8 @@ class EditExperience extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  
+const mapStateToProps = (state) => ({
+
 });
 
 export default connect(mapStateToProps, { updateExperience })(EditExperience);

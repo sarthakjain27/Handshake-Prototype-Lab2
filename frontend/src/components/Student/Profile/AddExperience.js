@@ -19,7 +19,7 @@ class AddExperience extends React.Component {
       country: '',
       startDate: new Date(),
       endDate: new Date(),
-      description: ''
+      description: '',
     };
     this.startDateChangeHandler = this.startDateChangeHandler.bind(this);
     this.endDateChangeHandler = this.endDateChangeHandler.bind(this);
@@ -27,9 +27,9 @@ class AddExperience extends React.Component {
     this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  onChangeHandler(e){
+  onChangeHandler(e) {
     this.setState({
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -58,7 +58,7 @@ class AddExperience extends React.Component {
         country: this.state.country,
         description: this.state.description,
         startDate: `${this.state.startDate.getFullYear()}/${this.state.startDate.getMonth() + 1}/${this.state.startDate.getDate()}`,
-        emailId: localStorage.getItem('email_id')
+        emailId: localStorage.getItem('email_id'),
       };
       if (this.state.endDate === '') {
         data.endDate = '';
@@ -145,8 +145,8 @@ class AddExperience extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  
+const mapStateToProps = (state) => ({
+
 });
 
 export default connect(mapStateToProps, { createExperience })(AddExperience);

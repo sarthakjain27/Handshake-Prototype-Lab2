@@ -41,7 +41,7 @@ class AllRoutes extends React.Component {
 
         <Route exact path="/listPostings" component={CompanyHome} />
         <Route exact path="/newJobPost" component={NewJobPost} />
-        <Route exact path="/AppliedStudentsInJob" component={JobAppliedStudents}/>
+        <Route exact path="/AppliedStudentsInJob" component={JobAppliedStudents} />
         <Route exact path="/listEvents" component={CompanyListEvents} />
         <Route exact path="/newEventPost" component={NewEventPost} />
         <Route exact path="/companyProfile" component={CompanyProfile} />

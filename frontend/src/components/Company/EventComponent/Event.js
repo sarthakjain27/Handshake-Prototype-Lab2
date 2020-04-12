@@ -6,8 +6,8 @@ class Event extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirectNav: ''
-    }
+      redirectNav: '',
+    };
     console.log(props);
     this.showStudents = this.showStudents.bind(this);
     this.capitalize = this.capitalize.bind(this);
@@ -19,7 +19,7 @@ class Event extends React.Component {
   showStudents(e) {
     e.preventDefault();
     this.setState({
-      redirectNav:<Redirect to={{pathname:'/RegisteredStudentsInEvent',state:{students:this.props.event.registeredStudents,eventId:this.props.event._id}}}/>
+      redirectNav: <Redirect to={{ pathname: '/RegisteredStudentsInEvent', state: { students: this.props.event.registeredStudents, eventId: this.props.event._id } }} />,
     });
   }
 
@@ -33,7 +33,7 @@ class Event extends React.Component {
     return '';
   }
 
-  capitalizeArray(arr){
+  capitalizeArray(arr) {
     console.log(arr);
     return arr.join(', ');
   }

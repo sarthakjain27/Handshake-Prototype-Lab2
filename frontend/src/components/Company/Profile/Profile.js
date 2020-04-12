@@ -26,9 +26,9 @@ class Profile extends React.Component {
     this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  onChangeHandler(e){
+  onChangeHandler(e) {
     this.setState({
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -132,8 +132,8 @@ class Profile extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  profile: state.profile.companyProfile
+const mapStateToProps = (state) => ({
+  profile: state.profile.companyProfile,
 });
 
 export default connect(mapStateToProps, { updateCompanyProfile })(Profile);

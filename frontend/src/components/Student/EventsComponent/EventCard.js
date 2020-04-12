@@ -19,7 +19,7 @@ class EventCard extends React.Component {
     console.log('-----EventCard Props-----');
     console.log(props);
     console.log(typeof props.event.eligibility);
-    //console.log(JSON.parse(props.event.eligibility));
+    // console.log(JSON.parse(props.event.eligibility));
     this.capitalize = this.capitalize.bind(this);
     this.convertTime = this.convertTime.bind(this);
     this.convertDate = this.convertDate.bind(this);
@@ -59,7 +59,7 @@ class EventCard extends React.Component {
 
   registerForEvent(e) {
     e.preventDefault();
-    this.props.registerForEvent({ studentId: localStorage.getItem('email_id'), eventId: this.props.event._idEvent })
+    this.props.registerForEvent({ studentId: localStorage.getItem('email_id'), eventId: this.props.event._idEvent });
   }
 
   render() {
@@ -70,12 +70,12 @@ class EventCard extends React.Component {
     if (this.props.showRegisterButton) {
       let eligible = false;
       const currentYear = (new Date()).getFullYear();
-      let studentEducation = []
-      if(JSON.parse(sessionStorage.getItem('educationSetFromListEvents'))!==null){
+      let studentEducation = [];
+      if (JSON.parse(sessionStorage.getItem('educationSetFromListEvents')) !== null) {
         studentEducation = JSON.parse(sessionStorage.getItem('educationSetFromListEvents'));
         console.log('---studentEducation in EventCard ---');
         console.log(studentEducation);
-        //const eligibilityMajors = this.props.event.eligibility.toLowerCase().split(',');
+        // const eligibilityMajors = this.props.event.eligibility.toLowerCase().split(',');
         const eligibilityMajors = this.props.event.eligibility;
         console.log(eligibilityMajors);
         for (const i of studentEducation) {
@@ -98,11 +98,10 @@ class EventCard extends React.Component {
         );
       }
     }
-    if(this.props.event.profile_picture_url === '')
-    {
+    if (this.props.event.profile_picture_url === '') {
       this.props.event.profile_picture_url = '/default.png';
     }
-    let companyImgSrc = serverIp+':'+serverPort+'/'+this.props.event.profile_picture_url;
+    const companyImgSrc = `${serverIp}:${serverPort}/${this.props.event.profile_picture_url}`;
     return (
       <div>
         <br />
@@ -120,7 +119,7 @@ class EventCard extends React.Component {
               {this.capitalize(this.props.event.eventName)}
               {' '}
               |
-              <a href={'/viewCompanyProfile/'+this.props.event._idCompany}>{this.capitalize(this.props.event.name)}</a>
+              <a href={`/viewCompanyProfile/${this.props.event._idCompany}`}>{this.capitalize(this.props.event.name)}</a>
               {' '}
               {' '}
               {button}
@@ -168,8 +167,8 @@ class EventCard extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  
+const mapStateToProps = (state) => ({
+
 });
 
 export default connect(mapStateToProps, { registerForEvent })(EventCard);

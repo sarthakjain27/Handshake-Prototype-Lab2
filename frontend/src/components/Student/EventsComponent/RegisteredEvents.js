@@ -13,59 +13,60 @@ class RegisteredEvents extends React.Component {
     super(props);
     this.state = {
       registeredEvents: [],
-      noRecord:false,
-      currentActivePage:1,
-      jobsToShow:3
+      noRecord: false,
+      currentActivePage: 1,
+      jobsToShow: 3,
     };
     this.returnEventsCards = this.returnEventsCards.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
   }
 
   componentDidMount() {
-    this.props.getRegisteredEvents({emailId: localStorage.getItem('email_id')});
+    this.props.getRegisteredEvents({ emailId: localStorage.getItem('email_id') });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.searchResult) {
-      var { searchResult } = nextProps;
+      const { searchResult } = nextProps;
 
-      if(searchResult.noRecord){
-          this.setState({
-              noRecord: searchResult.noRecord,
-              registeredEvents: []
-          });
+      if (searchResult.noRecord) {
+        this.setState({
+          noRecord: searchResult.noRecord,
+          registeredEvents: [],
+        });
       } else {
-          this.setState({
-            registeredEvents: searchResult.eventList
-          });
-        }
+        this.setState({
+          registeredEvents: searchResult.eventList,
+        });
+      }
     }
   }
 
   returnEventsCards() {
-    if(this.state.registeredEvents.length > 0){
-      let eachPageJobCards = [], numberOfJobsToShowPerPage = this.state.jobsToShow
-      let activePage = this.state.currentActivePage;
+    if (this.state.registeredEvents.length > 0) {
+      const eachPageJobCards = []; const
+        numberOfJobsToShowPerPage = this.state.jobsToShow;
+      const activePage = this.state.currentActivePage;
       let count = 0;
-      for(let i=(activePage-1)*numberOfJobsToShowPerPage;i<this.state.registeredEvents.length && count < numberOfJobsToShowPerPage;i++,count++){
-        eachPageJobCards.push(<EventCard event={this.state.registeredEvents[i]} key={i} showRegisterButton={false}/>)
+      for (let i = (activePage - 1) * numberOfJobsToShowPerPage; i < this.state.registeredEvents.length && count < numberOfJobsToShowPerPage; i++, count++) {
+        eachPageJobCards.push(<EventCard event={this.state.registeredEvents[i]} key={i} showRegisterButton={false} />);
       }
       return eachPageJobCards;
-    } else return [];
+    } return [];
   }
 
-  onPageChange(e){
+  onPageChange(e) {
     console.log(e.target.value);
     let currentPage = this.state.currentActivePage;
-    if (e.target.value === "next" ) {
+    if (e.target.value === 'next') {
       currentPage += 1;
-    } else if (e.target.value === "prev") {
+    } else if (e.target.value === 'prev') {
       currentPage -= 1;
-    } else if(currentPage!==parseInt(e.target.value)) {
-        currentPage = parseInt(e.target.value);
+    } else if (currentPage !== parseInt(e.target.value)) {
+      currentPage = parseInt(e.target.value);
     } else return;
     this.setState({
-        currentActivePage: currentPage
+      currentActivePage: currentPage,
     });
   }
 
@@ -75,33 +76,38 @@ class RegisteredEvents extends React.Component {
       window.sessionStorage.clear();
       window.location.href = '/';
     }
-    let noRecordFoundMessage = "";
-    if(this.state.noRecord){
-      noRecordFoundMessage = <Alert variant="info">
-                You have not registered for any Events yet.
-                </Alert>
-    } 
+    let noRecordFoundMessage = '';
+    if (this.state.noRecord) {
+      noRecordFoundMessage = (
+        <Alert variant="info">
+          You have not registered for any Events yet.
+        </Alert>
+      );
+    }
     let pagesBar = null;
-    if(this.state.registeredEvents.length > 0){
-      let totalPageCount = Math.ceil(this.state.registeredEvents.length / this.state.jobsToShow);
-      let allPages = []
-      for(let i=1; i<=totalPageCount;i++){
+    if (this.state.registeredEvents.length > 0) {
+      const totalPageCount = Math.ceil(this.state.registeredEvents.length / this.state.jobsToShow);
+      const allPages = [];
+      for (let i = 1; i <= totalPageCount; i++) {
         allPages.push(
-          <PaginationItem active={i===this.state.currentActivePage}>
-          <PaginationLink name={i} value={i} onClick={this.onPageChange}>
-            {i}
+          <PaginationItem active={i === this.state.currentActivePage}>
+            <PaginationLink name={i} value={i} onClick={this.onPageChange}>
+              {i}
             </PaginationLink>
-          </PaginationItem>);
+          </PaginationItem>,
+        );
       }
-      pagesBar = <Pagination aria-label="Page navigation example">
-                    <PaginationItem disabled={this.state.currentActivePage===1}>
-                      <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
-                    </PaginationItem> 
-                    {allPages}
-                    <PaginationItem disabled={this.state.currentActivePage===totalPageCount}>
-                      <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
-                    </PaginationItem>
-                  </Pagination>
+      pagesBar = (
+        <Pagination aria-label="Page navigation example">
+          <PaginationItem disabled={this.state.currentActivePage === 1}>
+            <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
+          </PaginationItem>
+          {allPages}
+          <PaginationItem disabled={this.state.currentActivePage === totalPageCount}>
+            <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
+          </PaginationItem>
+        </Pagination>
+      );
     }
     return (
       <div>
@@ -141,8 +147,8 @@ class RegisteredEvents extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  searchResult: state.event.events
+const mapStateToProps = (state) => ({
+  searchResult: state.event.events,
 });
 
 export default connect(mapStateToProps, { getRegisteredEvents })(RegisteredEvents);

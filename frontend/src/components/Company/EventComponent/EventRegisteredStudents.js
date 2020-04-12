@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  Card, Modal, Image, Alert
+  Card, Modal, Image, Alert,
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { getStudentProfileAppliedInEvent } from '../../../actions/profileActions';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { getStudentProfileAppliedInEvent } from '../../../actions/profileActions';
 import { serverIp, serverPort } from '../../../config';
 import CustomNavBar from '../../NavBar/CustomNavBar';
 import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -15,10 +15,10 @@ class EventRegisteredStudents extends React.Component {
     super(props);
     this.state = {
       registeredStudents: [],
-      registeredStudentsProfile:[],
-      numberOfJobsToShowPerPage:5,
-      currentActivePage:1,
-      noRecord:false
+      registeredStudentsProfile: [],
+      numberOfJobsToShowPerPage: 5,
+      currentActivePage: 1,
+      noRecord: false,
     };
     this.returnRegisteredStudents = this.returnRegisteredStudents.bind(this);
     this.capitalize = this.capitalize.bind(this);
@@ -26,33 +26,35 @@ class EventRegisteredStudents extends React.Component {
   }
 
   // Constructor -> ComponentWillMount -> Render -> ComponentDidMount
-  componentDidMount(){
+  componentDidMount() {
     console.log('EventRegisteredStudents Component Did Mount got called');
-    if(this.props.location.state.students.length > 0){
+    if (this.props.location.state.students.length > 0) {
       this.setState({
-        registeredStudents:this.props.location.state.students
-      },()=>{
+        registeredStudents: this.props.location.state.students,
+      }, () => {
         this.props.getStudentProfileAppliedInEvent(this.state.registeredStudents);
-      })
-    }else this.setState({
-      noRecord:true
-    })
+      });
+    } else {
+      this.setState({
+        noRecord: true,
+      });
+    }
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     console.log('In EventRegisteredStudents componentWillReceiveProps');
     console.log(nextProps);
-    if(nextProps.registeredStudentsProfile){
-      var { registeredStudentsProfile } = nextProps;
-      if(registeredStudentsProfile.registeredStudents.length === 0){
-          this.setState({
-              noRecord: true
-          });
+    if (nextProps.registeredStudentsProfile) {
+      const { registeredStudentsProfile } = nextProps;
+      if (registeredStudentsProfile.registeredStudents.length === 0) {
+        this.setState({
+          noRecord: true,
+        });
       } else {
-          this.setState({
-            registeredStudentsProfile: registeredStudentsProfile.registeredStudents
-          });
-        }
+        this.setState({
+          registeredStudentsProfile: registeredStudentsProfile.registeredStudents,
+        });
+      }
     }
   }
 
@@ -65,28 +67,28 @@ class EventRegisteredStudents extends React.Component {
     return '';
   }
 
-  onPageChange(e){
+  onPageChange(e) {
     console.log(e.target.value);
     let currentPage = this.state.currentActivePage;
-    if (e.target.value === "next" ) {
+    if (e.target.value === 'next') {
       currentPage += 1;
-    } else if (e.target.value === "prev") {
+    } else if (e.target.value === 'prev') {
       currentPage -= 1;
-    } else if(currentPage!==parseInt(e.target.value)) {
-        currentPage = parseInt(e.target.value);
+    } else if (currentPage !== parseInt(e.target.value)) {
+      currentPage = parseInt(e.target.value);
     } else return;
     this.setState({
-        currentActivePage: currentPage
+      currentActivePage: currentPage,
     });
   }
 
   returnRegisteredStudents() {
-    if(this.state.registeredStudentsProfile.length > 0){
-      let eachPageJobCards = [];
+    if (this.state.registeredStudentsProfile.length > 0) {
+      const eachPageJobCards = [];
       let count = 0;
-      let activePage = this.state.currentActivePage;
-      for(let i=(activePage-1)*this.state.numberOfJobsToShowPerPage;i<this.state.registeredStudentsProfile.length && count < this.state.numberOfJobsToShowPerPage;i++,count++){
-        let eachStudent = this.state.registeredStudentsProfile[i];
+      const activePage = this.state.currentActivePage;
+      for (let i = (activePage - 1) * this.state.numberOfJobsToShowPerPage; i < this.state.registeredStudentsProfile.length && count < this.state.numberOfJobsToShowPerPage; i++, count++) {
+        const eachStudent = this.state.registeredStudentsProfile[i];
         let imgSrc = `${serverIp}:${serverPort}/default.png`;
         if (eachStudent.profilePictureUrl !== '') {
           imgSrc = `${serverIp}:${serverPort}/${eachStudent.profilePictureUrl}`;
@@ -174,46 +176,51 @@ class EventRegisteredStudents extends React.Component {
                 </Modal.Body>
               </Modal>
             </div>
-          </div>
+          </div>,
         );
       }
       return eachPageJobCards;
-    } else return [];
+    } return [];
   }
-  
+
   render() {
     if (!localStorage.getItem('userRole')) {
       window.localStorage.clear();
       window.sessionStorage.clear();
       window.location.href = '/';
     }
-    let noRecordFoundMessage = "";
-    if(this.state.noRecord){
-      noRecordFoundMessage = <Alert variant="info">
-                No Student have applied for this job yet.
-                </Alert>
+    let noRecordFoundMessage = '';
+    if (this.state.noRecord) {
+      noRecordFoundMessage = (
+        <Alert variant="info">
+          No Student have applied for this job yet.
+        </Alert>
+      );
     }
     let pagesBar = null;
-    if(this.state.registeredStudentsProfile.length > 0) {
-      let totalPageCount = Math.ceil(this.state.registeredStudentsProfile.length / this.state.numberOfJobsToShowPerPage);
-      let allPages = []
-      for(let i=1; i<=totalPageCount;i++){
+    if (this.state.registeredStudentsProfile.length > 0) {
+      const totalPageCount = Math.ceil(this.state.registeredStudentsProfile.length / this.state.numberOfJobsToShowPerPage);
+      const allPages = [];
+      for (let i = 1; i <= totalPageCount; i++) {
         allPages.push(
-        <PaginationItem active={i===this.state.currentActivePage}>
-          <PaginationLink name={i} value={i} onClick={this.onPageChange}>
-            {i}
-          </PaginationLink>
-        </PaginationItem>);
+          <PaginationItem active={i === this.state.currentActivePage}>
+            <PaginationLink name={i} value={i} onClick={this.onPageChange}>
+              {i}
+            </PaginationLink>
+          </PaginationItem>,
+        );
       }
-      pagesBar = <Pagination aria-label="Page navigation example">
-                    <PaginationItem disabled={this.state.currentActivePage===1}>
-                      <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
-                    </PaginationItem> 
-                    {allPages}
-                    <PaginationItem disabled={this.state.currentActivePage===totalPageCount}>
-                      <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
-                    </PaginationItem>
-                  </Pagination>
+      pagesBar = (
+        <Pagination aria-label="Page navigation example">
+          <PaginationItem disabled={this.state.currentActivePage === 1}>
+            <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
+          </PaginationItem>
+          {allPages}
+          <PaginationItem disabled={this.state.currentActivePage === totalPageCount}>
+            <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
+          </PaginationItem>
+        </Pagination>
+      );
     }
     return (
       <div>
@@ -247,8 +254,8 @@ class EventRegisteredStudents extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  registeredStudentsProfile: state.profile.registeredStudents
+const mapStateToProps = (state) => ({
+  registeredStudentsProfile: state.profile.registeredStudents,
 });
 
-export default connect(mapStateToProps, { getStudentProfileAppliedInEvent})(EventRegisteredStudents);
+export default connect(mapStateToProps, { getStudentProfileAppliedInEvent })(EventRegisteredStudents);

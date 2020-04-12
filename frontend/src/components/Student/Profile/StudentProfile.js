@@ -1,13 +1,13 @@
 import React from 'react';
 import './StudentProfile.css';
-import { Tooltip, Col, FormGroup} from 'reactstrap';
+import { Tooltip, Col, FormGroup } from 'reactstrap';
 import {
-  Card, Button, Modal
+  Card, Button, Modal,
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { getStudentProfile, updateSkills } from '../../../actions/profileActions';
-import {addMessageInConversation} from '../../../actions/messageActions'
 import Select from 'react-select';
+import { getStudentProfile, updateSkills } from '../../../actions/profileActions';
+import { addMessageInConversation } from '../../../actions/messageActions';
 import { serverIp, serverPort } from '../../../config';
 import CustomNavBar from '../../NavBar/CustomNavBar';
 import Education from './Education';
@@ -33,8 +33,8 @@ class StudentProfile extends React.Component {
         { label: 'AWS', value: 'aws' }],
       selectedSkills: [],
       tooltipOpen: false,
-      messageModalShow:false,
-      message:''
+      messageModalShow: false,
+      message: '',
     };
     this.capitalize = this.capitalize.bind(this);
     this.editBasicDetails = this.editBasicDetails.bind(this);
@@ -54,63 +54,67 @@ class StudentProfile extends React.Component {
 
   componentDidMount() {
     if (!this.props.match.params.id) {
-      this.props.getStudentProfile({emailId:localStorage.getItem('email_id')});
+      this.props.getStudentProfile({ emailId: localStorage.getItem('email_id') });
     } else {
       console.log(this.props);
-      this.props.getStudentProfile({emailId:this.props.match.params.id});
+      this.props.getStudentProfile({ emailId: this.props.match.params.id });
     }
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     console.log(nextProps);
     if (nextProps.profile) {
-      var { profile } = nextProps;
+      const { profile } = nextProps;
       this.setState({
-        basicDetails:{student_name:profile.name,date_of_birth:profile.dateOfBirth,college_name:profile.collegeName,city:profile.city,state:profile.state,country:profile.country,career_objective:profile.careerObjective,contact_phone:profile.contactPhone,contact_email:profile.contactEmail,profile_picture_url:profile.profilePictureUrl},
-        education:profile.educations,
-        experience:profile.experiences,
-        skills:profile.skills
-      },()=>{
+        basicDetails: {
+          student_name: profile.name, date_of_birth: profile.dateOfBirth, college_name: profile.collegeName, city: profile.city, state: profile.state, country: profile.country, career_objective: profile.careerObjective, contact_phone: profile.contactPhone, contact_email: profile.contactEmail, profile_picture_url: profile.profilePictureUrl,
+        },
+        education: profile.educations,
+        experience: profile.experiences,
+        skills: profile.skills,
+      }, () => {
         if (!this.props.match.params.id) {
-        localStorage.setItem('profile_picture_url',this.state.basicDetails.profile_picture_url);
+          localStorage.setItem('profile_picture_url', this.state.basicDetails.profile_picture_url);
         }
-        //window.location.reload();
+        // window.location.reload();
       });
     }
   }
 
-  onChangeHandler(e){
+  onChangeHandler(e) {
     this.setState({
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
-  handleApplicationClose(){
+  handleApplicationClose() {
     this.setState({
-      messageModalShow:false
+      messageModalShow: false,
     });
   }
 
-  messageModalShowChangeHandler(e){
+  messageModalShowChangeHandler(e) {
     e.preventDefault();
     this.setState({
-      messageModalShow:true
+      messageModalShow: true,
     });
   }
 
-  submitMessage(e){
+  submitMessage(e) {
     e.preventDefault();
-    this.props.addMessageInConversation({fromEmailId:localStorage.getItem('email_id'),
-                                          fromRole:localStorage.getItem('userRole'),
-                                          toEmailId:this.props.match.params.id,
-                                          toRole:'student',
-                                          message:this.state.message,
-                                          fromProfilePictureUrl:localStorage.getItem('profile_picture_url'),
-                                          fromName:localStorage.getItem('name'),
-                                          toProfilePictureUrl:this.state.basicDetails.profile_picture_url,
-                                          toName:this.state.basicDetails.student_name});
+    this.props.addMessageInConversation({
+      fromEmailId: localStorage.getItem('email_id'),
+      fromRole: localStorage.getItem('userRole'),
+      toEmailId: this.props.match.params.id,
+      toRole: 'student',
+      message: this.state.message,
+      fromProfilePictureUrl: localStorage.getItem('profile_picture_url'),
+      fromName: localStorage.getItem('name'),
+      toProfilePictureUrl: this.state.basicDetails.profile_picture_url,
+      toName: this.state.basicDetails.student_name,
+    });
     this.setState({
-      messageModalShow:false
+      messageModalShow: false,
     });
   }
 
@@ -329,18 +333,20 @@ class StudentProfile extends React.Component {
         profileSrc = this.state.basicDetails.profile_picture_url;
       }
       let showMessageButton = null;
-      if(this.props.match.params.id!==localStorage.getItem('email_id'))
-        showMessageButton = <Button variant="primary" onClick={this.messageModalShowChangeHandler}>
-                              Message
-                            </Button>
-      else{
-        if(localStorage.getItem('userRole')!=='student'){
-          showMessageButton = <Button variant="primary" onClick={this.messageModalShowChangeHandler}>
-                              Message
-                            </Button>
-        }
+      if (this.props.match.params.id !== localStorage.getItem('email_id')) {
+        showMessageButton = (
+          <Button variant="primary" onClick={this.messageModalShowChangeHandler}>
+            Message
+          </Button>
+        );
+      } else if (localStorage.getItem('userRole') !== 'student') {
+        showMessageButton = (
+          <Button variant="primary" onClick={this.messageModalShowChangeHandler}>
+            Message
+          </Button>
+        );
       }
-      
+
       profile = (
         <div>
           <div className="main-div-studentProfile">
@@ -350,9 +356,10 @@ class StudentProfile extends React.Component {
                   <Card border="primary">
                     <Card.Img variant="top" src={`${serverIp}:${serverPort}/${profileSrc}`} alt="Profile Picture" style={{ height: 300 }} />
                     <Card.Body>
-                      <Card.Title>{this.capitalize(this.state.basicDetails.student_name)}
-                      {' '}
-                      {showMessageButton}
+                      <Card.Title>
+                        {this.capitalize(this.state.basicDetails.student_name)}
+                        {' '}
+                        {showMessageButton}
                       </Card.Title>
                       <Card.Subtitle className="mb-2 text-muted">
                         Date of Birth:
@@ -419,7 +426,7 @@ class StudentProfile extends React.Component {
             </div>
           </div>
           <div>
-            <Modal show={this.state.messageModalShow} onHide={this.handleApplicationClose} >
+            <Modal show={this.state.messageModalShow} onHide={this.handleApplicationClose}>
               <Modal.Header closeButton>
                 <Modal.Title>
                   Include your message
@@ -432,16 +439,17 @@ class StudentProfile extends React.Component {
                       <textarea
                         rows="4"
                         cols="55"
-                        name="message" 
+                        name="message"
                         placeholder="Type your message here..."
                         onChange={this.onChangeHandler}
-                        required />
+                        required
+                      />
                     </Col>
                   </FormGroup>
                   <FormGroup check row>
-                    <Col sm={{ size: 4, offset:3 }}>
+                    <Col sm={{ size: 4, offset: 3 }}>
                       {/* I am using Button of react-bootstrap and not reactstrap and hence cannot give onSubmit for form and giving onClick of button */}
-                      <Button style={{width:150,height:50}} onClick={this.submitMessage}>Apply</Button>
+                      <Button style={{ width: 150, height: 50 }} onClick={this.submitMessage}>Apply</Button>
                     </Col>
                   </FormGroup>
                 </form>
@@ -462,8 +470,8 @@ class StudentProfile extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  profile: state.profile.user
+const mapStateToProps = (state) => ({
+  profile: state.profile.user,
 });
 
 export default connect(mapStateToProps, { getStudentProfile, updateSkills, addMessageInConversation })(StudentProfile);

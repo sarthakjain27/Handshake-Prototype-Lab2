@@ -2,11 +2,11 @@ import React from 'react';
 import './AppliedJobs.css';
 import Dropdown from 'react-dropdown';
 import {
-  Col, Button, Pagination, PaginationItem, PaginationLink
+  Col, Button, Pagination, PaginationItem, PaginationLink,
 } from 'reactstrap';
 import { Alert } from 'react-bootstrap';
-import CustomNavBar from '../../NavBar/CustomNavBar';
 import { connect } from 'react-redux';
+import CustomNavBar from '../../NavBar/CustomNavBar';
 import EachJobCard from './eachJobCard';
 import '../../../../node_modules/react-dropdown/style.css';
 import { listAppliedJobs } from '../../../actions/jobActions';
@@ -19,9 +19,9 @@ class AppliedJobs extends React.Component {
       allJobs: [],
       categoryOptions: ['Pending', 'Reviewed', 'Declined'],
       selectedCategoryFilter: '',
-      noRecord:false,
-      currentActivePage:1,
-      jobsToShow:3
+      noRecord: false,
+      currentActivePage: 1,
+      jobsToShow: 3,
     };
     this.appliedJobs = this.appliedJobs.bind(this);
     this.handleApplyFilter = this.handleApplyFilter.bind(this);
@@ -32,22 +32,22 @@ class AppliedJobs extends React.Component {
   }
 
   componentDidMount() {
-    this.props.listAppliedJobs({emailId: localStorage.getItem('email_id')});
+    this.props.listAppliedJobs({ emailId: localStorage.getItem('email_id') });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.searchResult) {
-      var { searchResult } = nextProps;
-      if(searchResult.noRecord){
-          this.setState({
-              noRecord: searchResult.noRecord
-          });
+      const { searchResult } = nextProps;
+      if (searchResult.noRecord) {
+        this.setState({
+          noRecord: searchResult.noRecord,
+        });
       } else {
-          this.setState({
-            allJobs: searchResult.jobList,
-            filteredJobs: searchResult.jobList
-          });
-        }
+        this.setState({
+          allJobs: searchResult.jobList,
+          filteredJobs: searchResult.jobList,
+        });
+      }
     }
   }
 
@@ -58,15 +58,16 @@ class AppliedJobs extends React.Component {
   }
 
   appliedJobs() {
-    if(this.state.filteredJobs.length > 0){
-      let eachPageJobCards = [], numberOfJobsToShowPerPage = this.state.jobsToShow
-      let activePage = this.state.currentActivePage;
+    if (this.state.filteredJobs.length > 0) {
+      const eachPageJobCards = []; const
+        numberOfJobsToShowPerPage = this.state.jobsToShow;
+      const activePage = this.state.currentActivePage;
       let count = 0;
-      for(let i=(activePage-1)*numberOfJobsToShowPerPage;i<this.state.filteredJobs.length && count < numberOfJobsToShowPerPage;i++,count++){
-        eachPageJobCards.push(<EachJobCard job={this.state.filteredJobs[i]} key={i}/>)
+      for (let i = (activePage - 1) * numberOfJobsToShowPerPage; i < this.state.filteredJobs.length && count < numberOfJobsToShowPerPage; i++, count++) {
+        eachPageJobCards.push(<EachJobCard job={this.state.filteredJobs[i]} key={i} />);
       }
       return eachPageJobCards;
-    } else return [];
+    } return [];
   }
 
   handleReset(e) {
@@ -75,7 +76,7 @@ class AppliedJobs extends React.Component {
     this.setState({
       selectedCategoryFilter: '',
       filteredJobs: allJobs,
-      noRecord:false
+      noRecord: false,
     });
   }
 
@@ -101,18 +102,18 @@ class AppliedJobs extends React.Component {
     }
   }
 
-  onPageChange(e){
+  onPageChange(e) {
     console.log(e.target.value);
     let currentPage = this.state.currentActivePage;
-    if (e.target.value === "next" ) {
+    if (e.target.value === 'next') {
       currentPage += 1;
-    } else if (e.target.value === "prev") {
+    } else if (e.target.value === 'prev') {
       currentPage -= 1;
-    } else if(currentPage!==parseInt(e.target.value)) {
-        currentPage = parseInt(e.target.value);
+    } else if (currentPage !== parseInt(e.target.value)) {
+      currentPage = parseInt(e.target.value);
     } else return;
     this.setState({
-        currentActivePage: currentPage
+      currentActivePage: currentPage,
     });
   }
 
@@ -122,33 +123,38 @@ class AppliedJobs extends React.Component {
       window.sessionStorage.clear();
       window.location.href = '/';
     }
-    let noRecordFoundMessage = "";
-    if(this.state.noRecord){
-      noRecordFoundMessage = <Alert variant="info">
-                You have not applied to any jobs yet!
-                </Alert>
-    } 
+    let noRecordFoundMessage = '';
+    if (this.state.noRecord) {
+      noRecordFoundMessage = (
+        <Alert variant="info">
+          You have not applied to any jobs yet!
+        </Alert>
+      );
+    }
     let pagesBar = null;
-    if(this.state.filteredJobs.length > 0){
-      let totalPageCount = Math.ceil(this.state.filteredJobs.length / this.state.jobsToShow);
-      let allPages = []
-      for(let i=1; i<=totalPageCount;i++){
+    if (this.state.filteredJobs.length > 0) {
+      const totalPageCount = Math.ceil(this.state.filteredJobs.length / this.state.jobsToShow);
+      const allPages = [];
+      for (let i = 1; i <= totalPageCount; i++) {
         allPages.push(
-          <PaginationItem active={i===this.state.currentActivePage}>
-          <PaginationLink name={i} value={i} onClick={this.onPageChange}>
-            {i}
+          <PaginationItem active={i === this.state.currentActivePage}>
+            <PaginationLink name={i} value={i} onClick={this.onPageChange}>
+              {i}
             </PaginationLink>
-          </PaginationItem>);
+          </PaginationItem>,
+        );
       }
-      pagesBar = <Pagination aria-label="Page navigation example">
-                    <PaginationItem disabled={this.state.currentActivePage===1}>
-                      <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
-                    </PaginationItem> 
-                    {allPages}
-                    <PaginationItem disabled={this.state.currentActivePage===totalPageCount}>
-                      <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
-                    </PaginationItem>
-                  </Pagination>
+      pagesBar = (
+        <Pagination aria-label="Page navigation example">
+          <PaginationItem disabled={this.state.currentActivePage === 1}>
+            <PaginationLink previous name="prev" value="prev" onClick={this.onPageChange} />
+          </PaginationItem>
+          {allPages}
+          <PaginationItem disabled={this.state.currentActivePage === totalPageCount}>
+            <PaginationLink next name="next" value="next" onClick={this.onPageChange} />
+          </PaginationItem>
+        </Pagination>
+      );
     }
     return (
       <div>
@@ -198,8 +204,8 @@ class AppliedJobs extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  searchResult: state.job.jobs
+const mapStateToProps = (state) => ({
+  searchResult: state.job.jobs,
 });
 
 export default connect(mapStateToProps, { listAppliedJobs })(AppliedJobs);

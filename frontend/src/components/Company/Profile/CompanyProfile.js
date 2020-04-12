@@ -4,8 +4,8 @@ import {
 } from 'reactstrap';
 import { Image } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { getCompanyProfile } from '../../../actions/profileActions';
 import { Redirect } from 'react-router';
+import { getCompanyProfile } from '../../../actions/profileActions';
 import { serverIp, serverPort } from '../../../config';
 import CustomNavBar from '../../NavBar/CustomNavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,7 +22,7 @@ class CompanyProfile extends React.Component {
       contact_phone: '',
       contact_email: '',
       profile_picture_url: '',
-      redirectNav: ''
+      redirectNav: '',
     };
     this.editProfileHandler = this.editProfileHandler.bind(this);
     this.capitalize = this.capitalize.bind(this);
@@ -30,15 +30,15 @@ class CompanyProfile extends React.Component {
 
   componentDidMount() {
     if (!this.props.match.params.id) {
-      this.props.getCompanyProfile({emailId:localStorage.getItem('email_id')});
+      this.props.getCompanyProfile({ emailId: localStorage.getItem('email_id') });
     } else {
-      this.props.getCompanyProfile({id:this.props.match.params.id});
+      this.props.getCompanyProfile({ id: this.props.match.params.id });
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.profile) {
-      var { profile } = nextProps;
+      const { profile } = nextProps;
       this.setState({
         company_name: profile.name,
         city: profile.city,
@@ -47,10 +47,10 @@ class CompanyProfile extends React.Component {
         description: profile.description,
         contact_phone: profile.contactPhone,
         contact_email: profile.contactEmail,
-        profile_picture_url: profile.profilePictureUrl
-      },()=>{
-        localStorage.setItem('profile_picture_url',this.state.profile_picture_url);
-        //window.location.reload();
+        profile_picture_url: profile.profilePictureUrl,
+      }, () => {
+        localStorage.setItem('profile_picture_url', this.state.profile_picture_url);
+        // window.location.reload();
       });
     }
   }
@@ -66,7 +66,7 @@ class CompanyProfile extends React.Component {
   editProfileHandler(e) {
     e.preventDefault();
     this.setState({
-      redirectNav:<Redirect to='/editCompanyProfile'/>
+      redirectNav: <Redirect to="/editCompanyProfile" />,
     });
   }
 
@@ -156,8 +156,8 @@ class CompanyProfile extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  profile: state.profile.companyProfile
+const mapStateToProps = (state) => ({
+  profile: state.profile.companyProfile,
 });
 
 export default connect(mapStateToProps, { getCompanyProfile })(CompanyProfile);

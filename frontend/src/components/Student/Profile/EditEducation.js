@@ -37,9 +37,9 @@ class EditEducation extends React.Component {
     this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  onChangeHandler(e){
+  onChangeHandler(e) {
     this.setState({
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -67,7 +67,7 @@ class EditEducation extends React.Component {
         yearOfPassing: this.state.yearOfPassing,
         cgpa: this.state.cgpa,
         educationId: this.state.educationId,
-        emailId:localStorage.getItem('email_id')
+        emailId: localStorage.getItem('email_id'),
       };
       this.props.updateEducation(data);
     }
@@ -145,8 +145,8 @@ class EditEducation extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  
+const mapStateToProps = (state) => ({
+
 });
 
 export default connect(mapStateToProps, { updateEducation })(EditEducation);
