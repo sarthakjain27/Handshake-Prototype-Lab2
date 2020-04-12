@@ -2,12 +2,11 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    commonjs:true
   },
   extends: [
-    'eslint:recommended',
     'plugin:react/recommended',
     'airbnb',
+    'eslint:recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -24,7 +23,11 @@ module.exports = {
     'react',
   ],
   rules: {
-    'no-console':off,
-    'no-unused-vars':off
+    "no-console":"off",
+    "no-unused-vars":"off",
+    "array-callback-return":"off",
+    "consistent-return":"off",
+    "no-underscore-dangle":"off",
+    "global-require":"off"
   },
 };

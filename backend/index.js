@@ -14,7 +14,7 @@ const EventComponent = require('./apis/eventComponent');
 const ProfileComponent = require('./apis/profileComponent');
 const SearchComponent = require('./apis/searchComponent');
 const MessageComponent = require('./apis/messageComponent');
-const { checkAuth } = require("./passport");
+const { checkAuth } = require('./passport');
 
 const app = express();
 // setting view engine
@@ -29,8 +29,8 @@ app.use(session({
   secret: 'sarthak_handshake_secure_string',
   resave: false,
   saveUninitialized: false,
-  duration: 60 * 60 * 1000,    // Overall duration of Session : 30 minutes : 1800 seconds
-  activeDuration: 5 * 60 * 1000
+  duration: 60 * 60 * 1000, // Overall duration of Session : 30 minutes : 1800 seconds
+  activeDuration: 5 * 60 * 1000,
 }));
 app.use(cors({ origin: `${Config.applicationAddress}:${Config.applicationPort}`, credentials: true }));
 app.use(express.static('./ProfilePictures/Company'));
@@ -38,7 +38,6 @@ app.use(express.static('./ProfilePictures/Student'));
 app.use(express.static('./ProfilePictures/Common'));
 app.use(express.static('./Resume/JobApplication'));
 app.use(express.static('./WebsiteImages'));
-
 
 
 app.post('/signup', (req, res) => {
@@ -57,12 +56,12 @@ app.post('/listCompanyPostedJobs', checkAuth, (req, res) => {
   JobComponent.listCompanyPostedJobs(req, res);
 });
 
-app.post('/getStudentInfo',  checkAuth, (req, res) => {
+app.post('/getStudentInfo', checkAuth, (req, res) => {
   ProfileComponent.getStudentInfo(req, res);
 });
 
 app.post('/getCompanyInfo', checkAuth, (req, res) => {
-  ProfileComponent.getCompanyInfo(req,res);
+  ProfileComponent.getCompanyInfo(req, res);
 });
 
 const companyProfilePictureStorage = multer.diskStorage({
@@ -71,7 +70,7 @@ const companyProfilePictureStorage = multer.diskStorage({
   },
   filename(req, file, cb) {
     console.log('Inside filename');
-    console.log(req.body)
+    console.log(req.body);
     cb(null, `company_${req.body.emailId}.${file.originalname.split('.')[file.originalname.split('.').length - 1]}`);
   },
 });
@@ -135,7 +134,7 @@ const studentProfilePictureStorage = multer.diskStorage({
   },
   filename(req, file, cb) {
     console.log('Inside filename');
-    console.log(req.body)
+    console.log(req.body);
     cb(null, `student_${req.body.emailId}.${file.originalname.split('.')[file.originalname.split('.').length - 1]}`);
   },
 });
@@ -194,9 +193,9 @@ app.post('/getAllMessageOFAConversation', checkAuth, (req, res) => {
   MessageComponent.getAllMessageOFAConversation(req, res);
 });
 
-app.post('/getAllConversationsOfAUser', checkAuth, (req, res)=>{
+app.post('/getAllConversationsOfAUser', checkAuth, (req, res) => {
   MessageComponent.getAllConversations(req, res);
-})
+});
 
 module.exports = app;
 
