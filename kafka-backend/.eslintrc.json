@@ -24,6 +24,16 @@
     "rules": {
         "no-console":"off",
         "no-unused-vars":"off",
-        "array-callback-return":"off"
+        "array-callback-return":"off",
+        "class-methods-use-this":"off",
+        "no-underscore-dangle":"off",
+        "camelcase":"off",
+        "no-shadow":"off",
+        "no-restricted-syntax":"off",
+        "eqeqeq":"off",
+        "no-param-reassign":"off",
+        "no-plusplus":"off",
+        "max-len":"off",
+        "consistent-return":"off"
     }
 }

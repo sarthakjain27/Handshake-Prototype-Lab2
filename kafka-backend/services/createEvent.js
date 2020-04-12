@@ -1,6 +1,6 @@
 const company = require('../models/company.model');
 
-function handle_request(msg, callback){
+function handle_request(msg, callback) {
   const posting = {
     name: msg.eventName.toLowerCase(),
     description: msg.description,
@@ -11,29 +11,29 @@ function handle_request(msg, callback){
     state: msg.cstate.toLowerCase(),
     country: msg.country.toLowerCase(),
     zipcode: msg.zipcode,
-    eligibility: msg.eligibility
-  }
-  const {emailId} = msg;
+    eligibility: msg.eligibility,
+  };
+  const { emailId } = msg;
 
-  company.findOne({emailId:emailId},function(err,result){
+  company.findOne({ emailId }, (err, result) => {
     if (err) {
       console.log(err);
-      callback(null,'Error');
-    } 
-    if(Object.keys(result).length === 0){
-      callback(null,'User Not Present');
+      callback(null, 'Error');
+    }
+    if (Object.keys(result).length === 0) {
+      callback(null, 'User Not Present');
     } else {
       console.log(result);
       result.eventPostings.push(posting);
       result.save()
-      .then(()=>{
-        callback(null,'Success');
-      }).catch((err)=>{
-        console.log("Inside catch of createEvent: "+err);
-        callback(null,'Error');
-      });
+        .then(() => {
+          callback(null, 'Success');
+        }).catch((err) => {
+          console.log(`Inside catch of createEvent: ${err}`);
+          callback(null, 'Error');
+        });
     }
   });
-};
+}
 
 exports.handle_request = handle_request;

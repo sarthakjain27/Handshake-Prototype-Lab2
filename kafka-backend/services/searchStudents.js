@@ -1,27 +1,27 @@
 const student = require('../models/student.model');
 
-function handle_request(msg, callback){
+function handle_request(msg, callback) {
   const { searchParam } = msg;
-  let queryParam = {}
+  let queryParam = {};
   if (searchParam === 'Name') {
-    queryParam = {'name':{ $regex: msg.value, $options: 'i' }};
+    queryParam = { name: { $regex: msg.value, $options: 'i' } };
   } else if (searchParam === 'College Name') {
-    queryParam = {'collegeName':{ $regex: msg.value, $options: 'i' }};
+    queryParam = { collegeName: { $regex: msg.value, $options: 'i' } };
   } else if (searchParam === 'Skill') {
-    queryParam = {'skills': msg.value};
+    queryParam = { skills: msg.value };
   } else if (searchParam !== 'ALL') {
-    callback(null,'Error');
-  } 
+    callback(null, 'Error');
+  }
 
-  student.find(queryParam,function(error,result){
+  student.find(queryParam, (error, result) => {
     if (error) {
       console.log(error);
       console.log('Error in companySearchForStudents');
-      callback(null,'Error');
+      callback(null, 'Error');
     }
     console.log(result);
-    callback(null,result);
+    callback(null, result);
   });
-};
+}
 
 exports.handle_request = handle_request;
