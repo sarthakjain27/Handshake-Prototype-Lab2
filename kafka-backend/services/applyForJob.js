@@ -2,9 +2,8 @@ const company = require('../models/company.model');
 
 function handle_request(msg, callback) {
   const {
-    jobPostId, studentId, date, companyName,
-  } = msg.body;
-  const resumeLocation = msg.file.filename;
+    jobPostId, studentId, date, companyName, resumeLocation
+  } = msg;
   company.findOne({ name: companyName }, (error, result) => {
     if (error) {
       console.log(error);

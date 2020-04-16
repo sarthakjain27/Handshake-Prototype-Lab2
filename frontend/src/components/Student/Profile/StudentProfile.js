@@ -449,7 +449,7 @@ class StudentProfile extends React.Component {
                   <FormGroup check row>
                     <Col sm={{ size: 4, offset: 3 }}>
                       {/* I am using Button of react-bootstrap and not reactstrap and hence cannot give onSubmit for form and giving onClick of button */}
-                      <Button style={{ width: 150, height: 50 }} onClick={this.submitMessage}>Apply</Button>
+                      <Button style={{ width: 150, height: 50 }} onClick={this.submitMessage}>Send</Button>
                     </Col>
                   </FormGroup>
                 </form>

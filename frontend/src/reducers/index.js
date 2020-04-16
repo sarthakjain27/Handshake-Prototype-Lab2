@@ -8,11 +8,11 @@ import searchReducer from './searchReducer';
 import messageReducer from './messageReducer';
 
 export default combineReducers({
-  login:loginReducer,
-  signup:signupReducer,
-  job:jobReducer,
-  profile:profileReducer,
-  event:eventReducer,
-  search:searchReducer,
-  message:messageReducer
+  login: loginReducer,
+  signup: signupReducer,
+  job: jobReducer,
+  profile: profileReducer,
+  event: eventReducer,
+  search: searchReducer,
+  message: messageReducer,
 });

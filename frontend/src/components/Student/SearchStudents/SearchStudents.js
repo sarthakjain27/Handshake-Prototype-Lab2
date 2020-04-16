@@ -25,7 +25,7 @@ class StudentSearchStudents extends React.Component {
       noRecord: false,
       currentActivePage: 1,
       jobsToShow: 5,
-      filterMajor: ['Computer Science', 'Computer Engineering', 'Software Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Data Science', 'Mechanical Engineering', 'Chemical Engineering', 'Metallurgy Engineering', 'Civil Engineering'],
+      filterMajor: ['Fashion','Commerce','Computer Science', 'Computer Engineering', 'Software Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Data Science', 'Mechanical Engineering', 'Chemical Engineering', 'Metallurgy Engineering', 'Civil Engineering'],
     };
     this.searchForStudents = this.searchForStudents.bind(this);
     this.onChangeSelectedOptionHandler = this.onChangeSelectedOptionHandler.bind(this);

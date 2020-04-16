@@ -44,6 +44,20 @@
         "no-restricted-syntax":"off",
         "radix":"off",
         "react/no-deprecated":"off",
-        "react/button-has-type":"off"
+        "react/button-has-type":"off",
+        "no-underscore-dangle":"off",
+        "no-unused-vars":"off",
+        "consistent-return":"off",
+        "camelcase":"off",
+        "import/prefer-default-export":"off",
+        "react/no-unused-state":"off",
+        "react/jsx-indent":"off",
+        "no-plusplus":"off",
+        "react/no-access-state-in-setstate":"off",
+        "import/no-named-as-default":"off",
+        "import/no-named-as-default-member":"off",
+        "import/order":"off",
+        "react/jsx-closing-tag-location":"off",
+        "jsx-a11y/no-noninteractive-tabindex":"off"
     }
 }

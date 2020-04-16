@@ -41,9 +41,10 @@ const applyForJob = (req, res) => {
   console.log(req.body);
   if (req.file) {
     console.log('Student Resume File Uploaded');
-    console.log(req.file);
+    //console.log(req.file);
+    req.body.resumeLocation = req.file.filename;
   }
-  kafka.make_request('applyForJob', req, (err, results) => {
+  kafka.make_request('applyForJob', req.body, (err, results) => {
     if (err) {
       res.send('Error');
     } else {

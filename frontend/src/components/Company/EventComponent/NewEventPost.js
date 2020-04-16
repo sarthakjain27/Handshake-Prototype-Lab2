@@ -28,7 +28,10 @@ class NewEventPost extends React.Component {
       zipcode: '',
       time: '',
       selectedMajors: [],
-      allMajors: [{ label: 'Computer Science', value: 'Computer Science' },
+      allMajors: [
+        { label: 'Fashion', value: 'Fashion' },
+        { label: 'Commerce', value: 'Commerce' },
+        { label: 'Computer Science', value: 'Computer Science' },
         { label: 'Computer Engineering', value: 'Computer Engineering' },
         { label: 'Software Engineering', value: 'Software Engineering' },
         { label: 'Electrical Engineering', value: 'Electrical Engineering' },

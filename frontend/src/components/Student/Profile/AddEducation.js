@@ -21,7 +21,10 @@ class AddEducation extends React.Component {
       yearOfPassing: '',
       cgpa: '',
       studentId: localStorage.getItem('student_id'),
-      allMajors: [{ label: 'Computer Science', value: 'Computer Science' },
+      allMajors: [
+        { label: 'Fashion', value: 'Fashion' },
+        { label: 'Commerce', value: 'Commerce' },
+        { label: 'Computer Science', value: 'Computer Science' },
         { label: 'Computer Engineering', value: 'Computer Engineering' },
         { label: 'Software Engineering', value: 'Software Engineering' },
         { label: 'Electrical Engineering', value: 'Electrical Engineering' },
